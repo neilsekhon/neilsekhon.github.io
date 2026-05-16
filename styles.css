@@ -65,13 +65,29 @@ body {
     sans-serif;
 }
 
+body[data-physics="bubbles"] {
+  background:
+    radial-gradient(circle at 58% 18%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 31%),
+    radial-gradient(circle at 84% 74%, color-mix(in srgb, var(--warm) 8%, transparent), transparent 33%),
+    linear-gradient(145deg, color-mix(in srgb, var(--accent) 5%, transparent), transparent 36%),
+    linear-gradient(315deg, color-mix(in srgb, var(--rose) 6%, transparent), transparent 34%),
+    var(--bg);
+}
+
+body[data-physics="orbit"] {
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--accent) 9%, transparent), transparent 34%),
+    linear-gradient(315deg, color-mix(in srgb, var(--rose) 10%, transparent), transparent 30%),
+    var(--bg);
+}
+
 body::after {
   position: fixed;
   width: 90vmax;
   aspect-ratio: 1;
   left: 50%;
   top: 50%;
-  z-index: -1;
+  z-index: -2;
   content: "";
   background:
     radial-gradient(circle at 50% 20%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 30%),
@@ -82,6 +98,17 @@ body::after {
   transform: translate(-50%, -50%) rotate(0deg);
   animation: globe-turn 120s linear infinite;
   pointer-events: none;
+}
+
+body[data-physics="bubbles"]::after {
+  opacity: 0.46;
+  filter: blur(34px);
+  animation-duration: 160s;
+}
+
+body[data-physics="orbit"]::after {
+  opacity: 0.72;
+  filter: blur(22px);
 }
 
 main {
@@ -287,6 +314,20 @@ a:focus-visible {
   outline-offset: 5px;
 }
 
+#physics-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.62;
+  pointer-events: none;
+}
+
+body[data-physics="orbit"] #physics-canvas {
+  opacity: 0.44;
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -375,6 +416,7 @@ a:focus-visible {
     width: min(100%, 168px);
     justify-self: end;
   }
+
 }
 
 @media (max-width: 360px) {
