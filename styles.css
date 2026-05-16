@@ -1,3 +1,27 @@
+@property --accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #a7ff7a;
+}
+
+@property --accent-strong {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #53d38a;
+}
+
+@property --warm {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f0a84f;
+}
+
+@property --rose {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #d86d80;
+}
+
 :root {
   color-scheme: dark;
   --bg: #080908;
@@ -10,6 +34,7 @@
   --accent-strong: #53d38a;
   --warm: #f0a84f;
   --rose: #d86d80;
+  animation: palette-orbit 96s ease-in-out infinite;
 }
 
 * {
@@ -22,15 +47,17 @@ html {
 }
 
 body {
+  position: relative;
   min-height: 100vh;
   margin: 0;
   display: grid;
   place-items: center;
   padding: 32px;
   overflow-x: hidden;
+  isolation: isolate;
   background:
-    linear-gradient(145deg, rgba(167, 255, 122, 0.09), transparent 34%),
-    linear-gradient(315deg, rgba(216, 109, 128, 0.1), transparent 30%),
+    linear-gradient(145deg, color-mix(in srgb, var(--accent) 9%, transparent), transparent 34%),
+    linear-gradient(315deg, color-mix(in srgb, var(--rose) 10%, transparent), transparent 30%),
     var(--bg);
   color: var(--ink);
   font-family:
@@ -38,17 +65,23 @@ body {
     sans-serif;
 }
 
-body::before {
+body::after {
   position: fixed;
-  inset: 0;
+  width: 90vmax;
+  aspect-ratio: 1;
+  left: 50%;
+  top: 50%;
   z-index: -1;
   content: "";
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 78%);
-  animation: drift 18s linear infinite;
+  background:
+    radial-gradient(circle at 50% 20%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 30%),
+    radial-gradient(circle at 82% 58%, color-mix(in srgb, var(--warm) 16%, transparent), transparent 32%),
+    radial-gradient(circle at 24% 68%, color-mix(in srgb, var(--rose) 14%, transparent), transparent 34%);
+  filter: blur(22px);
+  opacity: 0.72;
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: globe-turn 120s linear infinite;
+  pointer-events: none;
 }
 
 main {
@@ -71,7 +104,7 @@ header {
   border-radius: 50%;
   color: var(--accent);
   background: rgba(16, 18, 16, 0.82);
-  box-shadow: 0 0 36px rgba(167, 255, 122, 0.1);
+  box-shadow: 0 0 36px color-mix(in srgb, var(--accent) 10%, transparent);
   font-size: 11px;
   font-weight: 650;
   letter-spacing: 0;
@@ -127,8 +160,8 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 8px;
   background:
-    linear-gradient(135deg, rgba(167, 255, 122, 0.12), transparent 42%),
-    linear-gradient(315deg, rgba(240, 168, 79, 0.13), transparent 38%),
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent 42%),
+    linear-gradient(315deg, color-mix(in srgb, var(--warm) 13%, transparent), transparent 38%),
     var(--surface);
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
   color: var(--ink);
@@ -180,7 +213,7 @@ h1 {
   font-weight: 520;
   line-height: 1;
   letter-spacing: 0;
-  text-shadow: 0 0 28px rgba(167, 255, 122, 0.1);
+  text-shadow: 0 0 28px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .project-visual {
@@ -266,15 +299,46 @@ a:focus-visible {
   }
 }
 
-@keyframes drift {
+@keyframes palette-orbit {
+  0%,
+  100% {
+    --accent: #a7ff7a;
+    --accent-strong: #53d38a;
+    --warm: #f0a84f;
+    --rose: #d86d80;
+  }
+
+  25% {
+    --accent: #7ad7ff;
+    --accent-strong: #49a8f2;
+    --warm: #c6a6ff;
+    --rose: #ff8fb8;
+  }
+
+  50% {
+    --accent: #ffe66d;
+    --accent-strong: #ffb84d;
+    --warm: #7affc2;
+    --rose: #ff7a7a;
+  }
+
+  75% {
+    --accent: #c8ff72;
+    --accent-strong: #77d66b;
+    --warm: #7cc7ff;
+    --rose: #d59cff;
+  }
+}
+
+@keyframes globe-turn {
   to {
-    background-position: 44px 44px;
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 
 @keyframes pulse {
   50% {
-    box-shadow: 0 0 44px rgba(167, 255, 122, 0.2);
+    box-shadow: 0 0 44px color-mix(in srgb, var(--accent) 20%, transparent);
   }
 }
 
