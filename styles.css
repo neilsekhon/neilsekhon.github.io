@@ -94,23 +94,6 @@ header {
   gap: 56px;
 }
 
-.mark {
-  width: 42px;
-  height: 42px;
-  margin: 0;
-  display: grid;
-  place-items: center;
-  border: 1px solid color-mix(in srgb, var(--line), var(--accent) 18%);
-  border-radius: 50%;
-  color: var(--accent);
-  background: rgba(16, 18, 16, 0.82);
-  box-shadow: 0 0 36px color-mix(in srgb, var(--accent) 10%, transparent);
-  font-size: 11px;
-  font-weight: 650;
-  letter-spacing: 0;
-  animation: pulse 4.8s ease-in-out infinite;
-}
-
 h1 {
   margin: 0;
   max-width: 660px;
@@ -141,6 +124,12 @@ h1 {
   transition:
     color 160ms ease,
     text-decoration-color 160ms ease;
+}
+
+.meta .linkedin {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
 }
 
 .meta a:hover {
