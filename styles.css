@@ -145,7 +145,7 @@ h1 {
 .linkedin::before { opacity: 0; }
 .play:hover, .play:focus-visible { background: #b7f6bf; }
 .play:active { translate: 2px 2px; box-shadow: 2px 2px #050818; }
-footer { margin-top: 16px; }
+footer { margin-top: 16px; display: flex; flex-direction: column; align-items: center; }
 .linkedin { font-size: 23px; color: #a1a6c8; }
 .linkedin svg { width: 15px; height: 15px; }
 .linkedin:hover, .linkedin:focus-visible { color: #ffe4a0; }
@@ -165,3 +165,18 @@ a:focus-visible { outline: 2px dashed #ffe4a0; outline-offset: 6px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; }
 }
+
+button, input { font: inherit; }
+button { cursor: pointer; }
+.resume { background: none; border: 0; }
+button:focus-visible { outline: 2px dashed #ffe4a0; outline-offset: 6px; }
+#resume-dialog { width: min(360px, calc(100% - 40px)); padding: 28px; color: #f4efdc; background: #0d1028; border: 2px solid #59618b; box-shadow: 8px 8px #050819; }
+#resume-dialog::backdrop { background: rgb(5 8 25 / 80%); }
+#resume-dialog h2 { margin: 0 0 24px; font-size: 32px; font-weight: 400; text-transform: uppercase; color: #ffe4a0; }
+#resume-dialog label { display: block; margin-bottom: 8px; font-size: 23px; color: #abaed3; }
+#resume-password { width: 100%; min-height: 44px; padding: 8px 12px; border: 2px solid #59618b; border-radius: 0; background: #090c20; color: #f4efdc; font-family: monospace; font-size: 16px; }
+#resume-password:focus { outline: 2px solid #ffe4a0; outline-offset: 2px; }
+#resume-error { min-height: 24px; margin: 12px 0; font-size: 20px; color: #ffc1d0; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 16px; }
+.dialog-actions button { min-height: 44px; padding: 6px 16px; font-size: 23px; border: 2px solid #59618b; background: transparent; color: #abaed3; }
+.dialog-actions button[type="submit"] { background: #90e0ac; border-color: #d5ffcb #3c806d #3c806d #d5ffcb; color: #0c2423; }
