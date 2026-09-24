@@ -51,15 +51,15 @@ async function openResume(password) {
   submit.disabled = true;
   resumeError.textContent = '';
   try {
-    const response = await fetch('resume.enc.json');
+    const response = await fetch('resume.enc.json?v=pdf1');
     if (!response.ok) throw new Error('network');
     const payload = await response.json();
     const bytes = value => Uint8Array.from(atob(value), char => char.charCodeAt(0));
     const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
     const key = await crypto.subtle.deriveKey({name: 'PBKDF2', salt: bytes(payload.salt), iterations: 600000, hash: 'SHA-256'}, material, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
-    let html;
+    let pdf;
     try {
-      html = await crypto.subtle.decrypt({name: 'AES-GCM', iv: bytes(payload.iv)}, key, bytes(payload.data));
+      pdf = await crypto.subtle.decrypt({name: 'AES-GCM', iv: bytes(payload.iv)}, key, bytes(payload.data));
     } catch {
       resumeTab.close();
       try { localStorage.removeItem(resumeStorageKey); } catch {}
@@ -69,7 +69,7 @@ async function openResume(password) {
       return;
     }
     try { localStorage.setItem(resumeStorageKey, password); } catch {}
-    resumeTab.location.replace(URL.createObjectURL(new Blob([html], {type: 'text/html'})));
+    resumeTab.location.replace(URL.createObjectURL(new Blob([pdf], {type: 'application/pdf'})));
     resumeDialog.close();
     resumeForm.reset();
   } catch {
