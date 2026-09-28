@@ -13,7 +13,7 @@ function storedKey() {
     open.onupgradeneeded = () => open.result.createObjectStore('keys');
     open.onerror = () => resolve(null);
     open.onsuccess = () => {
-      const get = open.result.transaction('keys').objectStore('keys').get('site');
+      const get = open.result.transaction('keys').objectStore('keys').get('site-raw');
       get.onsuccess = () => resolve(get.result || null);
       get.onerror = () => resolve(null);
     };
@@ -21,8 +21,9 @@ function storedKey() {
 }
 
 async function load(rel) {
-  const key = await storedKey();
-  if (!key) return null;
+  const raw = await storedKey();
+  if (!raw) return null;
+  const key = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['decrypt']);
   if (decrypted.has(rel)) return decrypted.get(rel);
   const response = await fetch(base + rel + '.enc');
   if (!response.ok) return null;

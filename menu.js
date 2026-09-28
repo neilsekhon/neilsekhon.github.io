@@ -52,27 +52,29 @@ if (location.hash === '#portfolio') {
   ask('portfolio');
 }
 
-async function deriveKey(password, salt) {
-  const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
-  return crypto.subtle.deriveKey({name: 'PBKDF2', salt: bytes(salt), iterations: 600000, hash: 'SHA-256'}, material, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
+async function deriveBits(password, salt) {
+  const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
+  return crypto.subtle.deriveBits({name: 'PBKDF2', salt: bytes(salt), iterations: 600000, hash: 'SHA-256'}, material, 256);
 }
-function storeKey(key) {
+const aesKey = raw => crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['decrypt']);
+// Raw bytes, not a CryptoKey: Safari can't read stored CryptoKeys from a service worker.
+function storeKey(raw) {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open('neil-site', 1);
     request.onupgradeneeded = () => request.result.createObjectStore('keys');
     request.onerror = () => reject(request.error);
     request.onsuccess = () => {
       const tx = request.result.transaction('keys', 'readwrite');
-      tx.objectStore('keys').put(key, 'site');
+      tx.objectStore('keys').put(raw, 'site-raw');
       tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error);
     };
   });
 }
 async function activeWorker() {
-  const registration = await navigator.serviceWorker.register('deck/sw.js', {scope: 'deck/'});
-  if (registration.active) return;
+  const registration = await navigator.serviceWorker.register('deck/sw.js?v=2', {scope: 'deck/', updateViaCache: 'none'});
   const worker = registration.installing || registration.waiting;
+  if (!worker) return;
   await new Promise(resolve => worker.addEventListener('statechange', () => worker.state === 'activated' && resolve()));
 }
 class WrongPassword extends Error {}
@@ -81,7 +83,7 @@ async function openResume(password) {
   const response = await fetch('resume.enc.json?v=pdf2');
   if (!response.ok) throw new Error('network');
   const payload = await response.json();
-  const key = await deriveKey(password, payload.salt);
+  const key = await aesKey(await deriveBits(password, payload.salt));
   try {
     const pdf = await crypto.subtle.decrypt({name: 'AES-GCM', iv: bytes(payload.iv)}, key, bytes(payload.data));
     return URL.createObjectURL(new Blob([pdf], {type: 'application/pdf'}));
@@ -94,14 +96,15 @@ async function openPortfolio(password) {
     fetch('key.json').then(r => r.ok ? r.json() : Promise.reject(new Error('network'))),
     fetch('deck/index.html.enc').then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error('network'))),
   ]);
-  const key = await deriveKey(password, keyInfo.salt);
+  const raw = await deriveBits(password, keyInfo.salt);
+  const key = await aesKey(raw);
   const data = new Uint8Array(deck);
   try {
     await crypto.subtle.decrypt({name: 'AES-GCM', iv: data.subarray(0, 12)}, key, data.subarray(12));
   } catch {
     throw new WrongPassword();
   }
-  await storeKey(key);
+  await storeKey(raw);
   await activeWorker();
   return 'deck/';
 }
