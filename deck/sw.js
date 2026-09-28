@@ -3,6 +3,13 @@
 const base = new URL('./', self.location).pathname;
 const types = { html: 'text/html; charset=utf-8', png: 'image/png', jpg: 'image/jpeg', gif: 'image/gif', svg: 'image/svg+xml', mp4: 'video/mp4', otf: 'font/otf', woff2: 'font/woff2' };
 const decrypted = new Map();
+let memoryKey = null;
+
+self.addEventListener('message', event => {
+  memoryKey = event.data;
+  decrypted.clear();
+  event.ports[0]?.postMessage('ok');
+});
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
@@ -14,14 +21,14 @@ function storedKey() {
     open.onerror = () => resolve(null);
     open.onsuccess = () => {
       const get = open.result.transaction('keys').objectStore('keys').get('site-raw');
-      get.onsuccess = () => resolve(get.result || null);
-      get.onerror = () => resolve(null);
+      get.onsuccess = () => { open.result.close(); resolve(get.result || null); };
+      get.onerror = () => { open.result.close(); resolve(null); };
     };
   });
 }
 
 async function load(rel) {
-  const raw = await storedKey();
+  const raw = memoryKey || await storedKey();
   if (!raw) return null;
   const key = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['decrypt']);
   if (decrypted.has(rel)) return decrypted.get(rel);

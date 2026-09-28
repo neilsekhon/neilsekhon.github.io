@@ -64,18 +64,35 @@ function storeKey(raw) {
     request.onupgradeneeded = () => request.result.createObjectStore('keys');
     request.onerror = () => reject(request.error);
     request.onsuccess = () => {
-      const tx = request.result.transaction('keys', 'readwrite');
+      const db = request.result;
+      const tx = db.transaction('keys', 'readwrite');
       tx.objectStore('keys').put(raw, 'site-raw');
-      tx.oncomplete = () => resolve();
-      tx.onerror = () => reject(tx.error);
+      tx.oncomplete = () => { db.close(); resolve(); };
+      tx.onerror = () => { db.close(); reject(tx.error); };
     };
   });
 }
-async function activeWorker() {
-  const registration = await navigator.serviceWorker.register('deck/sw.js?v=2', {scope: 'deck/', updateViaCache: 'none'});
+const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
+async function activeWorker(raw) {
+  const registration = await navigator.serviceWorker.register('deck/sw.js?v=3', {scope: 'deck/', updateViaCache: 'none'});
   const worker = registration.installing || registration.waiting;
-  if (!worker) return;
-  await new Promise(resolve => worker.addEventListener('statechange', () => worker.state === 'activated' && resolve()));
+  if (worker && worker.state !== 'activated') {
+    await Promise.race([
+      new Promise(resolve => worker.addEventListener('statechange', () => ['activated', 'redundant'].includes(worker.state) && resolve())),
+      timeout(5000),
+    ]);
+  }
+  // Hand the key over directly too, in case the worker can't read IndexedDB.
+  const active = registration.active;
+  if (!active) throw new Error('worker');
+  await Promise.race([
+    new Promise(resolve => {
+      const channel = new MessageChannel();
+      channel.port1.onmessage = resolve;
+      active.postMessage(raw, [channel.port2]);
+    }),
+    timeout(2000),
+  ]);
 }
 class WrongPassword extends Error {}
 
@@ -84,12 +101,14 @@ async function openResume(password) {
   if (!response.ok) throw new Error('network');
   const payload = await response.json();
   const key = await aesKey(await deriveBits(password, payload.salt));
+  let pdf;
   try {
-    const pdf = await crypto.subtle.decrypt({name: 'AES-GCM', iv: bytes(payload.iv)}, key, bytes(payload.data));
-    return URL.createObjectURL(new Blob([pdf], {type: 'application/pdf'}));
+    pdf = await crypto.subtle.decrypt({name: 'AES-GCM', iv: bytes(payload.iv)}, key, bytes(payload.data));
   } catch {
     throw new WrongPassword();
   }
+  const url = URL.createObjectURL(new Blob([pdf], {type: 'application/pdf'}));
+  if (!window.open(url, '_blank')) location.href = url;
 }
 async function openPortfolio(password) {
   const [keyInfo, deck] = await Promise.all([
@@ -105,32 +124,23 @@ async function openPortfolio(password) {
     throw new WrongPassword();
   }
   await storeKey(raw);
-  await activeWorker();
-  return 'deck/';
+  await activeWorker(raw);
+  location.href = 'deck/';
 }
 
+// Check the password before opening anything, so a wrong one never flashes a page.
 async function unlock(password) {
   if (opening) return;
-  // Open during the click or submit gesture so browsers allow the new tab.
-  const tab = window.open('about:blank', '_blank');
-  if (!tab) {
-    ask(action);
-    resumeError.textContent = 'Allow pop-ups, then try again.';
-    return;
-  }
-  tab.opener = null;
   opening = true;
   const submit = resumeForm.querySelector('[type="submit"]');
   submit.disabled = true;
   resumeError.textContent = '';
   try {
-    const url = action === 'portfolio' ? await openPortfolio(password) : await openResume(password);
+    await (action === 'portfolio' ? openPortfolio(password) : openResume(password));
     try { localStorage.setItem(resumeStorageKey, password); } catch {}
-    tab.location.replace(new URL(url, location.href).href);
     resumeDialog.close();
     resumeForm.reset();
   } catch (error) {
-    tab.close();
     if (!resumeDialog.open) ask(action);
     if (error instanceof WrongPassword) {
       try { localStorage.removeItem(resumeStorageKey); } catch {}
