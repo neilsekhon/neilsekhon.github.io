@@ -8,7 +8,7 @@
       content="Neil Sekhon is a product designer and software engineer in Santa Monica, CA."
     >
     <title>Neil Sekhon</title>
-    <link rel="stylesheet" href="styles.css?v=11">
+    <link rel="stylesheet" href="styles.css?v=12">
   </head>
   <body>
     <main aria-label="Neil Sekhon portfolio">
@@ -60,7 +60,12 @@
       <form id="resume-form">
         <h2 id="resume-title">Resume</h2>
         <label for="resume-password">Password</label>
-        <input id="resume-password" type="password" autocomplete="current-password" required autofocus aria-describedby="resume-error">
+        <div class="password-field">
+          <input id="resume-password" type="password" autocomplete="off" data-1p-ignore data-lpignore="true" required autofocus aria-describedby="resume-error">
+          <button type="button" id="password-toggle" aria-label="Show password" aria-pressed="false">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="slash" d="M3 3l18 18"/></svg>
+          </button>
+        </div>
         <p id="resume-error" role="status" aria-live="polite"></p>
         <div class="dialog-actions">
           <button type="button" id="resume-cancel">Cancel</button>
@@ -68,6 +73,6 @@
         </div>
       </form>
     </dialog>
-    <script src="menu.js?v=15"></script>
+    <script src="menu.js?v=16"></script>
   </body>
 </html>

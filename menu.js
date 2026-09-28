@@ -23,10 +23,21 @@ let opening = false;
 function cachedPassword() {
   try { return localStorage.getItem(resumeStorageKey); } catch { return null; }
 }
+const passwordToggle = document.querySelector('#password-toggle');
+function showPassword(show) {
+  passwordInput.type = show ? 'text' : 'password';
+  passwordToggle.setAttribute('aria-pressed', show);
+  passwordToggle.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+}
+passwordToggle.addEventListener('click', () => {
+  showPassword(passwordInput.type === 'password');
+  passwordInput.focus();
+});
 function ask(name) {
   action = name;
   resumeTitle.textContent = name === 'portfolio' ? 'Portfolio' : 'Resume';
   resumeForm.reset();
+  showPassword(false);
   resumeError.textContent = '';
   if (!resumeDialog.open) resumeDialog.showModal();
 }
