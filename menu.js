@@ -13,71 +13,131 @@ document.addEventListener('keydown', (event) => {
 
 const resumeDialog = document.querySelector('#resume-dialog');
 const resumeForm = document.querySelector('#resume-form');
+const resumeTitle = document.querySelector('#resume-title');
 const passwordInput = document.querySelector('#resume-password');
 const resumeError = document.querySelector('#resume-error');
 const resumeStorageKey = 'neil-resume-password';
-let openingResume = false;
+const bytes = value => Uint8Array.from(atob(value), char => char.charCodeAt(0));
+let action = 'resume';
+let opening = false;
 function cachedPassword() {
   try { return localStorage.getItem(resumeStorageKey); } catch { return null; }
 }
-document.querySelector('.resume').addEventListener('click', () => {
-  if (openingResume) return;
-  const password = cachedPassword();
-  if (password) {
-    openResume(password);
-    return;
-  }
+function ask(name) {
+  action = name;
+  resumeTitle.textContent = name === 'portfolio' ? 'Portfolio' : 'Resume';
   resumeForm.reset();
   resumeError.textContent = '';
-  resumeDialog.showModal();
-});
+  if (!resumeDialog.open) resumeDialog.showModal();
+}
+function start(name) {
+  if (opening) return;
+  const password = cachedPassword();
+  if (password) {
+    action = name;
+    unlock(password);
+    return;
+  }
+  ask(name);
+}
+document.querySelector('.resume').addEventListener('click', () => start('resume'));
+document.querySelector('.portfolio').addEventListener('click', () => start('portfolio'));
 document.querySelector('#resume-cancel').addEventListener('click', () => resumeDialog.close());
 resumeForm.addEventListener('submit', (event) => {
   event.preventDefault();
-  openResume(passwordInput.value);
+  unlock(passwordInput.value);
 });
+if (location.hash === '#portfolio') {
+  history.replaceState(null, '', location.pathname);
+  ask('portfolio');
+}
+
+async function deriveKey(password, salt) {
+  const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({name: 'PBKDF2', salt: bytes(salt), iterations: 600000, hash: 'SHA-256'}, material, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
+}
+function storeKey(key) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('neil-site', 1);
+    request.onupgradeneeded = () => request.result.createObjectStore('keys');
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const tx = request.result.transaction('keys', 'readwrite');
+      tx.objectStore('keys').put(key, 'site');
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    };
+  });
+}
+async function activeWorker() {
+  const registration = await navigator.serviceWorker.register('deck/sw.js', {scope: 'deck/'});
+  if (registration.active) return;
+  const worker = registration.installing || registration.waiting;
+  await new Promise(resolve => worker.addEventListener('statechange', () => worker.state === 'activated' && resolve()));
+}
+class WrongPassword extends Error {}
+
 async function openResume(password) {
-  if (openingResume) return;
+  const response = await fetch('resume.enc.json?v=pdf2');
+  if (!response.ok) throw new Error('network');
+  const payload = await response.json();
+  const key = await deriveKey(password, payload.salt);
+  try {
+    const pdf = await crypto.subtle.decrypt({name: 'AES-GCM', iv: bytes(payload.iv)}, key, bytes(payload.data));
+    return URL.createObjectURL(new Blob([pdf], {type: 'application/pdf'}));
+  } catch {
+    throw new WrongPassword();
+  }
+}
+async function openPortfolio(password) {
+  const [keyInfo, deck] = await Promise.all([
+    fetch('key.json').then(r => r.ok ? r.json() : Promise.reject(new Error('network'))),
+    fetch('deck/index.html.enc').then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error('network'))),
+  ]);
+  const key = await deriveKey(password, keyInfo.salt);
+  const data = new Uint8Array(deck);
+  try {
+    await crypto.subtle.decrypt({name: 'AES-GCM', iv: data.subarray(0, 12)}, key, data.subarray(12));
+  } catch {
+    throw new WrongPassword();
+  }
+  await storeKey(key);
+  await activeWorker();
+  return 'deck/';
+}
+
+async function unlock(password) {
+  if (opening) return;
   // Open during the click or submit gesture so browsers allow the new tab.
-  const resumeTab = window.open('about:blank', '_blank');
-  if (!resumeTab) {
-    if (!resumeDialog.open) resumeDialog.showModal();
+  const tab = window.open('about:blank', '_blank');
+  if (!tab) {
+    ask(action);
     resumeError.textContent = 'Allow pop-ups, then try again.';
     return;
   }
-  resumeTab.opener = null;
-  openingResume = true;
+  tab.opener = null;
+  opening = true;
   const submit = resumeForm.querySelector('[type="submit"]');
   submit.disabled = true;
   resumeError.textContent = '';
   try {
-    const response = await fetch('resume.enc.json?v=pdf1');
-    if (!response.ok) throw new Error('network');
-    const payload = await response.json();
-    const bytes = value => Uint8Array.from(atob(value), char => char.charCodeAt(0));
-    const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
-    const key = await crypto.subtle.deriveKey({name: 'PBKDF2', salt: bytes(payload.salt), iterations: 600000, hash: 'SHA-256'}, material, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
-    let pdf;
-    try {
-      pdf = await crypto.subtle.decrypt({name: 'AES-GCM', iv: bytes(payload.iv)}, key, bytes(payload.data));
-    } catch {
-      resumeTab.close();
-      try { localStorage.removeItem(resumeStorageKey); } catch {}
-      if (!resumeDialog.open) resumeDialog.showModal();
-      resumeError.textContent = 'Incorrect password. Try again.';
-      passwordInput.select();
-      return;
-    }
+    const url = action === 'portfolio' ? await openPortfolio(password) : await openResume(password);
     try { localStorage.setItem(resumeStorageKey, password); } catch {}
-    resumeTab.location.replace(URL.createObjectURL(new Blob([pdf], {type: 'application/pdf'})));
+    tab.location.replace(new URL(url, location.href).href);
     resumeDialog.close();
     resumeForm.reset();
-  } catch {
-    resumeTab.close();
-    if (!resumeDialog.open) resumeDialog.showModal();
-    resumeError.textContent = 'Could not open resume. Try again.';
+  } catch (error) {
+    tab.close();
+    if (!resumeDialog.open) ask(action);
+    if (error instanceof WrongPassword) {
+      try { localStorage.removeItem(resumeStorageKey); } catch {}
+      resumeError.textContent = 'Incorrect password. Try again.';
+      passwordInput.select();
+    } else {
+      resumeError.textContent = `Could not open ${action}. Try again.`;
+    }
   } finally {
     submit.disabled = false;
-    openingResume = false;
+    opening = false;
   }
 }
