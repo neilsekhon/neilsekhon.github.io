@@ -85,7 +85,7 @@ function storeKey(raw) {
 }
 const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
 async function activeWorker(raw) {
-  const registration = await navigator.serviceWorker.register('deck/sw.js?v=3', {scope: 'deck/', updateViaCache: 'none'});
+  const registration = await navigator.serviceWorker.register('deck/sw.js?v=4', {scope: 'deck/', updateViaCache: 'none'});
   const worker = registration.installing || registration.waiting;
   if (worker && worker.state !== 'activated') {
     await Promise.race([
@@ -119,6 +119,7 @@ async function openResume(password) {
     throw new WrongPassword();
   }
   const url = URL.createObjectURL(new Blob([pdf], {type: 'application/pdf'}));
+  window.siteAnalytics?.('resume_open');
   if (!window.open(url, '_blank')) location.href = url;
 }
 async function openPortfolio(password) {
@@ -136,6 +137,7 @@ async function openPortfolio(password) {
   }
   await storeKey(raw);
   await activeWorker(raw);
+  window.siteAnalytics?.('portfolio_open');
   location.href = 'deck/';
 }
 

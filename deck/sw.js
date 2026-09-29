@@ -45,8 +45,15 @@ async function load(rel) {
 }
 
 async function serve(request, rel) {
-  const data = await load(rel);
+  let data = await load(rel);
   if (!data) return fetch(request);
+  // Attach the public analytics script when serving the decrypted deck. This also
+  // covers existing encrypted releases without changing their ciphertext.
+  if (rel === 'index.html') {
+    const html = new TextDecoder().decode(data);
+    data = new TextEncoder().encode(html.replace('</head>',
+      '<script src="../analytics.js?v=1" defer></script></head>'));
+  }
   const type = types[rel.split('.').pop()] || 'application/octet-stream';
   const range = /bytes=(\d*)-(\d*)/.exec(request.headers.get('range') || '');
   if (!range) {
