@@ -58,10 +58,6 @@ resumeForm.addEventListener('submit', (event) => {
   event.preventDefault();
   unlock(passwordInput.value);
 });
-if (location.hash === '#portfolio') {
-  history.replaceState(null, '', location.pathname);
-  ask('portfolio');
-}
 
 async function deriveBits(password, salt) {
   const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
