@@ -6,21 +6,23 @@
   const measurementId = 'G-Z3XWJJCM1W';
   window.dataLayer = window.dataLayer || [];
   function gtag() { window.dataLayer.push(arguments); }
-  const allowedEvents = new Set([
-    'portfolio_click', 'resume_click', 'portfolio_open', 'resume_open', 'slide_view',
-  ]);
+
+  // Only these events, and only these parameter values, ever leave the page.
+  const projects = new Set(['rhythmoji', 'blockle', 'dayhub', 'codehop', 'totem', 'freshman15']);
+  const sources = new Set(['button', 'phone']);
+  const allowedEvents = new Set(['project_view', 'game_play', 'opossum', 'soft_tap']);
   window.siteAnalytics = (name, parameters = {}) => {
     if (!allowedEvents.has(name)) return;
-    // Only a numeric slide position is accepted; never collect form values or deck copy.
-    const safeParameters = name === 'slide_view' && Number.isInteger(parameters.slide_number)
-      ? { slide_number: parameters.slide_number } : {};
-    gtag('event', name, safeParameters);
+    const safe = {};
+    if (projects.has(parameters.project)) safe.project = parameters.project;
+    if (name === 'game_play' && sources.has(parameters.source)) safe.source = parameters.source;
+    gtag('event', name, safe);
   };
 
   gtag('js', new Date());
   gtag('config', measurementId, {
     page_location: location.origin + location.pathname,
-    page_title: location.pathname.startsWith('/deck/') ? 'Portfolio' : 'Neil Sekhon',
+    page_title: 'Neil Sekhon',
     page_referrer: (() => {
       try { return new URL(document.referrer).origin; } catch { return ''; }
     })(),
@@ -32,20 +34,30 @@
   script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
   document.head.appendChild(script);
 
-  document.addEventListener('click', event => {
-    if (event.target.closest('button.portfolio')) window.siteAnalytics('portfolio_click');
-    if (event.target.closest('button.resume')) window.siteAnalytics('resume_click');
-  });
+  const projectOf = el => el.closest('[data-project]')?.dataset.project;
 
-  let previousSlide;
-  function trackSlide() {
-    const slides = [...document.querySelectorAll('.slide')];
-    const number = slides.findIndex(slide => slide.classList.contains('active')) + 1;
-    if (number > 0 && number !== previousSlide) {
-      previousSlide = number;
-      window.siteAnalytics('slide_view', { slide_number: number });
+  // Capture phase, so taps the page intercepts (soft content, the opossum) still count.
+  document.addEventListener('click', event => {
+    const target = event.target;
+    const project = projectOf(target);
+    if (!project) return;
+    if (document.documentElement.classList.contains('soft')) {
+      window.siteAnalytics('soft_tap', { project });
+    } else if (target.closest('a.play')) {
+      window.siteAnalytics('game_play', { project, source: 'button' });
+    } else if (target.closest('a.phone')) {
+      window.siteAnalytics('game_play', { project, source: 'phone' });
+    } else if (target.closest('li.old figure')) {
+      window.siteAnalytics('opossum', { project });
     }
-  }
-  trackSlide();
-  window.addEventListener('hashchange', trackSlide);
+  }, true);
+
+  // How far down people get: each project counts once, when half of it is on screen.
+  const seen = new IntersectionObserver(entries => entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    seen.unobserve(entry.target);
+    window.siteAnalytics('project_view', { project: entry.target.dataset.project });
+  }), { threshold: 0.5 });
+  const watch = () => document.querySelectorAll('[data-project]').forEach(el => seen.observe(el));
+  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', watch) : watch();
 })();

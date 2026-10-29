@@ -1,11 +1,11 @@
 # neilsekhon.com website
 
 This repository contains the static files for Neil Sekhon’s personal website at
-https://neilsekhon.com: the homepage, portfolio deck, and password-protected résumé.
+https://neilsekhon.com: a single-page timeline of projects.
 
 ## Analytics
 
-[Google Analytics dashboard](https://analytics.google.com/analytics/web/#/a85630993p556498911/reports/intelligenthome) — visitors, page views, clicks, and portfolio engagement.
+[Google Analytics dashboard](https://analytics.google.com/analytics/web/#/a85630993p556498911/reports/intelligenthome) — visitors, page views, project views, and game plays. Events are documented in `ANALYTICS.md`.
 
 ## Why this folder exists
 
@@ -22,20 +22,20 @@ any local changes have first been committed and pushed.
 
 ## What is here
 
-- `index.html`: homepage, project links, and portfolio/résumé controls.
-- `styles.css`: homepage styling.
-- `menu.js`: password dialog and portfolio/résumé opening logic.
-- `resume.enc.json`: encrypted résumé content.
-- `key.json`: data used by the site's unlock flow.
-- `deck/`: portfolio loader, service worker, encrypted deck, media, and fonts.
-- `assets/`: homepage font and its license.
+- `index.html`: the whole page, with its styles and scripts inline.
+- `analytics.js`: Google Analytics, production hosts only.
+- `media/`: project videos, posters, and the easter-egg sticker.
+- `fonts/`: Geist.
+- `favicon.png`, `apple-touch-icon.png`: tab and home-screen icons.
+- `deck/sw.js`: retires the old portfolio deck's service worker in returning browsers.
+- `tests/`: `node tests/analytics.mjs`.
 - `CNAME`: custom domain configuration.
 
 The site uses plain HTML, CSS, and JavaScript; this checkout has no package manifest
 or build command. To preview locally, run a static HTTP server from this directory
 (for example, `python3 -m http.server 8000` if Python is installed), then open
-http://localhost:8000. Preview through HTTP so browser fetches and service workers
-can work.
+http://localhost:8000. Preview through HTTP so video and font requests
+work.
 
 ## Editing and publishing
 
