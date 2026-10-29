@@ -7,6 +7,21 @@
 - Measurement ID: `G-Z3XWJJCM1W`
 - Reporting time zone: Los Angeles
 
+## Home page
+
+The home page loads `home-analytics.js`, which uses the same measurement ID and privacy rules.
+
+| Event | Meaning | Parameters |
+| --- | --- | --- |
+| `project_view` | Half of a project scrolled into view, once per visit | `project` |
+| `game_play` | Opened a game | `project`, `source` (`button` or `phone`) |
+| `opossum` | Tapped an older project's phone | `project` |
+| `soft_tap` | Tapped dimmed work at the top, which scrolls to it | `project` |
+
+`project` is one of `rhythmoji`, `blockle`, `dayhub`, `codehop`, `totem`, `freshman15`. **Project** and **Source** are registered event-scoped custom dimensions. Run `node tests/home-analytics.mjs` to check it.
+
+The sections below cover `analytics.js`, which the encrypted portfolio deck still loads through `deck/sw.js`.
+
 ## Reports
 
 Use **Reports** for visitors, pages, traffic sources, devices, and engagement. Use **Realtime** to check incoming visits after deployment. Standard reports can take 24–48 hours to populate. Counts begin when tracking is deployed; historical visits are unavailable.

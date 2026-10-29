@@ -1,79 +1,326 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta
-      name="description"
-      content="Neil Sekhon is a product designer and software engineer in Santa Monica, CA."
-    >
-    <title>Neil Sekhon</title>
-    <link rel="stylesheet" href="styles.css?v=13">
-  </head>
-  <body>
-    <main aria-label="Neil Sekhon portfolio">
-      <header>
-        <div>
-          <h1>Neil Sekhon</h1>
-          <p class="meta">
-            <span>designer + engineer</span>
-          </p>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>neil sekhon</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script src="home-analytics.js?v=1" defer></script>
+<meta name="description" content="Neil Sekhon, designer + engineer. A timeline of my work.">
+<script>document.documentElement.classList.add('js', 'soft');</script>
+<style>
+@font-face { font-family: "Geist"; src: url("fonts/geist.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
 
-        </div>
-      </header>
+:root {
+  color-scheme: dark;
+  --ground: #0a0a0a;
+  --ink: #ededed;
+  --body: rgb(237 237 237 / 0.66);
+  --muted: rgb(237 237 237 / 0.42);
+  --line: rgb(237 237 237 / 0.08);
+}
 
-      <section class="project" aria-label="Blockle">
-        <span class="project-visual" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-        <a class="play" href="https://blockle.dev/" aria-label="Play Blockle">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5a.5.5 0 0 1 .76-.43l9 5.5a.5.5 0 0 1 0 .86l-9 5.5A.5.5 0 0 1 4 13.5z"/></svg>
-          Play Blockle
-        </a>
-      </section>
-      <footer>
-        <button class="portfolio linkedin" type="button" aria-haspopup="dialog" hidden>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 4h20v13H2zM12 17v4M7 21h10"/></svg>
-          <span>Portfolio</span>
-        </button>
-        <button class="resume linkedin" type="button" aria-haspopup="dialog">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8M8 16h8"/></svg>
-          <span>Resume</span>
-        </button>
-            <a class="linkedin" href="https://www.linkedin.com/in/nsekhon/" aria-label="LinkedIn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-              </svg>
-              <span>LinkedIn</span>
-            </a>
-      </footer>
-    </main>
-    <dialog id="resume-dialog" aria-labelledby="resume-title">
-      <form id="resume-form">
-        <h2 id="resume-title">Resume</h2>
-        <label for="resume-password">Password</label>
-        <div class="password-field">
-          <input id="resume-password" type="password" autocomplete="off" data-1p-ignore data-lpignore="true" required autofocus aria-describedby="resume-error">
-          <button type="button" id="password-toggle" aria-label="Show password" aria-pressed="false">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="slash" d="M3 3l18 18"/></svg>
-          </button>
-        </div>
-        <p id="resume-error" role="status" aria-live="polite"></p>
-        <div class="dialog-actions">
-          <button type="button" id="resume-cancel">Cancel</button>
-          <button type="submit">Open</button>
-        </div>
-      </form>
-    </dialog>
-    <script src="analytics.js?v=1" defer></script>
-    <script src="menu.js?v=18"></script>
-  </body>
+* { box-sizing: border-box; margin: 0; }
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font: 400 16px/1.55 "Geist", -apple-system, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+main { max-width: 808px; margin: 0 auto; padding: calc(var(--hero) + 144px) 24px 0; }
+/* At the very top the work sits dim so the name holds focus; it brightens as you scroll.
+   Fallback for browsers without scroll-driven animations: a class toggle. */
+main { transition: opacity .6s cubic-bezier(.165,.84,.44,1); }
+.soft main { opacity: 0.35; }
+
+/* The page opens on a large name that shrinks into a slim glass header as you scroll.
+   Scroll only drives transforms and opacity (--p, 0 → 1 over 160px), so phones stay smooth. */
+:root { --big: 56px; --small: 0.268; --pad: 120px; --bar: 64px; --hero: calc(var(--pad) + var(--big) * 1.15 + 34px); }
+header {
+  --p: 0;
+  position: fixed; inset: 0 0 auto; z-index: 10; height: var(--bar);
+  padding: 0 max(24px, calc((100% - 744px) / 2));
+  pointer-events: none;
+}
+header::before {
+  content: ""; position: absolute; inset: 0;
+  background: rgb(10 10 10 / 0.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  backdrop-filter: blur(20px) saturate(1.6);
+  opacity: var(--p);
+}
+/* The hairline appears only once the name has fully docked. */
+header::after { content: ""; position: absolute; inset: auto 0 0; height: 1px; background: var(--line); opacity: 0; transition: opacity .3s ease; }
+header.docked::after { opacity: 1; }
+/* LinkedIn sits at the right end of the bar, always reachable. */
+.social {
+  position: absolute; top: 0; right: max(24px, calc((100% - 744px) / 2)); height: var(--bar);
+  display: flex; align-items: center; gap: 4px; pointer-events: auto;
+  color: var(--muted); font-size: 14px; text-decoration: none;
+  opacity: 0; visibility: hidden;
+  transition: color .2s cubic-bezier(.165,.84,.44,1), opacity .3s ease, visibility 0s linear .3s;
+}
+/* LinkedIn arrives with the hairline, once the name has docked. */
+header.docked .social { opacity: 1; visibility: visible; transition: color .2s cubic-bezier(.165,.84,.44,1), opacity .3s ease, visibility 0s; }
+.social svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.social:hover, .social:focus-visible { color: var(--ink); }
+.id { position: relative; padding-top: var(--pad); transform: translateY(calc((14px - var(--pad)) * var(--p))); will-change: transform; }
+
+/* Each project fades up once as it scrolls into view. */
+.js li { opacity: 0; transform: translateY(32px); transition: opacity .8s cubic-bezier(.165,.84,.44,1), transform .8s cubic-bezier(.165,.84,.44,1); }
+.js li.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .js li { opacity: 1; transform: none; transition: none; } }
+/* Name and title are drawn at hero size and scaled down into the bar. */
+h1 { font-size: var(--big); font-weight: 600; line-height: 1.15; letter-spacing: -0.04em; transform-origin: 0 0; transform: scale(calc(1 - (1 - var(--small)) * var(--p))); will-change: transform; }
+header p { color: var(--muted); font-size: 20px; line-height: 1.3; margin-top: 6px; transform-origin: 0 0; transform: translateY(calc((6px + (var(--big) - 15px) * 1.15) * -1 * var(--p))) scale(calc(1 - 0.3 * var(--p))); will-change: transform; }
+
+/* Where supported (Safari 26+, Chrome), the scroll position drives these directly,
+   in step with the finger and off the main thread. JS then only handles the fallback. */
+@supports (animation-timeline: scroll()) {
+  header::before, .id, h1, header p, main {
+    animation-timing-function: linear; animation-fill-mode: both;
+    animation-timeline: scroll(root); animation-range: 0 160px;
+  }
+  header::before { animation-name: glass-in; }
+  .id { animation-name: id-up; }
+  h1 { animation-name: name-shrink; }
+  header p { animation-name: title-up; }
+  main { animation-name: work-in; transition: none; }
+  .soft main { opacity: 1; }
+}
+@keyframes glass-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes id-up { from { transform: none; } to { transform: translateY(calc(14px - var(--pad))); } }
+@keyframes name-shrink { from { transform: none; } to { transform: scale(var(--small)); } }
+@keyframes title-up { from { transform: none; } to { transform: translateY(calc((6px + (var(--big) - 15px) * 1.15) * -1)) scale(0.7); } }
+@keyframes work-in { from { opacity: 0.35; } to { opacity: 1; } }
+
+ol { list-style: none; padding: 0 0 160px; display: grid; gap: 120px; }
+/* Phone left, words right, side by side. */
+li { display: grid; grid-template-columns: 280px minmax(0, 400px); justify-content: center; grid-template-rows: 1fr auto auto auto 1fr; column-gap: 64px; }
+li figure { grid-column: 1; grid-row: 1 / -1; margin: 0; }
+li h2, li time, li p { grid-column: 2; }
+li h2 { grid-row: 2; }
+li time { grid-row: 3; }
+li p { grid-row: 4; }
+
+figure { margin-bottom: 24px; container-type: inline-size; }
+
+/* Modern iPhone: dark bezel, hairline edge, Dynamic Island. */
+.phone {
+  display: block; position: relative; margin: 0 auto;
+  width: 100%; aspect-ratio: 9 / 19.5;
+  padding: 2.6cqi;
+  background: #050505;
+  border-radius: 13cqi;
+  box-shadow: 0 0 0 1px #3d3a34, 0 24px 48px -16px rgb(0 0 0 / 0.6);
+}
+.phone::after {
+  content: ""; position: absolute; top: 5cqi; left: 50%;
+  width: 17cqi; height: 5cqi; transform: translateX(-50%);
+  background: #050505; border-radius: 99px;
+}
+.phone > img, .phone > video { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; border-radius: 10.6cqi; }
+
+/* Screen with status bar and home indicator, so app recordings fit whole in the safe area. */
+.screen { height: 100%; display: flex; flex-direction: column; border-radius: 10.6cqi; overflow: hidden; color: #fff; }
+.status { flex: none; height: 10cqi; display: flex; align-items: center; justify-content: space-between; padding: 0 8cqi 0 9cqi; font: 600 4cqi/1 -apple-system, system-ui, sans-serif; }
+.status svg { height: 3.6cqi; width: auto; fill: currentColor; }
+.screen video { flex: 1; min-height: 0; width: 100%; object-fit: contain; display: block; }
+.home { flex: none; height: 6cqi; display: grid; place-items: center; }
+.home::before { content: ""; width: 34cqi; height: 1.4cqi; border-radius: 99px; background: currentColor; opacity: 0.9; }
+
+/* Classic iPhone (home button) for 16:9 screenshots. */
+.phone.classic { aspect-ratio: auto; padding: 22cqi 5cqi; border-radius: 14cqi; }
+.phone.classic::before { content: ""; position: absolute; top: 10cqi; left: 50%; width: 16cqi; height: 1.6cqi; transform: translateX(-50%); border-radius: 99px; background: #1c1c1c; }
+.phone.classic::after { top: auto; bottom: 4.5cqi; width: 13cqi; height: 13cqi; background: none; box-shadow: inset 0 0 0 0.6cqi #2a2a2a; }
+.phone.classic > img, .phone.classic > video { height: auto; aspect-ratio: 9 / 16; object-fit: fill; border-radius: 1cqi; }
+
+h2 { font-size: 40px; font-weight: 600; line-height: 1.05; letter-spacing: -0.035em; }
+.play {
+  grid-column: 2; grid-row: 4; justify-self: start; margin-top: 24px;
+  display: inline-flex; align-items: center; gap: 6px; padding: 0 14px 0 18px; height: 40px;
+  border-radius: 99px; background: var(--ink); color: var(--ground);
+  box-shadow: inset 0 -1px 0 rgb(0 0 0 / 0.12), 0 1px 2px rgb(0 0 0 / 0.4);
+  font-size: 14px; font-weight: 500; letter-spacing: -0.005em; text-decoration: none;
+  transition: background .2s cubic-bezier(.165,.84,.44,1);
+}
+.play svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s cubic-bezier(.165,.84,.44,1); }
+.play:hover { background: #fff; }
+.play:hover svg { transform: translate(2px, -2px); }
+.play:active { background: #d4d4d4; }
+.play:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+time { display: block; color: var(--muted); font-size: 16px; line-height: 1; font-variant-numeric: tabular-nums; margin-top: 14px; }
+
+li p { color: var(--body); margin-top: 20px; max-width: 30em; }
+
+@media (max-width: 560px) {
+  :root { --big: 40px; --small: 0.375; --pad: 72px; }
+  main { padding: calc(var(--hero) + 88px) 16px 0; }
+  header { padding-left: 16px; padding-right: 16px; }
+  .social { right: 16px; }
+  ol { gap: 88px; padding-bottom: 96px; }
+  li { grid-template-columns: 1fr; grid-template-rows: none; text-align: center; }
+  li figure { grid-column: 1; grid-row: auto; margin-bottom: 24px; }
+  li h2, li time, li p, .play { grid-column: 1; grid-row: auto; }
+  .play { justify-self: center; }
+  h2 { font-size: 32px; }
+  li figure { width: 72%; margin-inline: auto; }
+}
+
+/* Easter egg: tapping an older project's phone makes the garbage opossum pop up from the bottom of its screen. */
+li.old figure { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+/* Clipped to the screen: modern bezel inset, then the classic home-button bezel. */
+.possum { position: absolute; inset: 2.6cqi; z-index: 2; overflow: hidden; border-radius: 10.6cqi; pointer-events: none; }
+.phone.classic > .possum { inset: 22cqi 5cqi; border-radius: 1cqi; }
+.possum[hidden] { display: none; }
+/* South Park cutout: pop up, rock stiffly twice, hold, drop back down. */
+.possum img {
+  position: absolute; left: 8%; bottom: 0; width: 84%; display: block;
+  filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(0 -8px 20px rgb(0 0 0 / 0.5));
+  transform-origin: 50% 100%;
+  animation: possum-in 3.2s ease-in-out both;
+}
+@keyframes possum-in {
+  0% { transform: translateY(110%); }
+  12% { transform: translateY(0) rotate(0); animation-timing-function: linear; }
+  16% { transform: rotate(7deg); } 22% { transform: rotate(-6deg); }
+  28% { transform: rotate(7deg); } 34% { transform: rotate(-6deg); }
+  39%, 86% { transform: translateY(0) rotate(0); }
+  100% { transform: translateY(110%); }
+}
+@media (prefers-reduced-motion: reduce) { .possum img { animation: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="id">
+    <h1>neil sekhon</h1>
+    <p>designer + engineer</p>
+  </div>
+  <a class="social" href="https://www.linkedin.com/in/nsekhon/" target="_blank" rel="noopener">LinkedIn<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+</header>
+
+<main>
+  <ol>
+    <li data-project="rhythmoji">
+      <figure><a class="phone" href="https://www.snapchat.com/lens/8f943ca0563544a98f3d4382113056e3" target="_blank" rel="noopener" aria-label="Play Rhythmoji on Snapchat"><div class="screen" style="background: linear-gradient(#05070d, #3d202d)"><div class="status"><span>9:41</span><svg viewBox="0 0 66 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="6" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><path d="M30 2.2a10 10 0 0 1 7 2.9l1.3-1.4A12 12 0 0 0 30 .3a12 12 0 0 0-8.3 3.4L23 5.1a10 10 0 0 1 7-2.9zm0 4a6 6 0 0 1 4.1 1.6l1.4-1.4A8 8 0 0 0 30 4.2a8 8 0 0 0-5.5 2.2l1.4 1.4A6 6 0 0 1 30 6.2zm0 4l-2.4 1.6L30 12l2.4-1.8z"/><rect x="43" y=".5" width="20" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".5"/><rect x="45" y="2.5" width="16" height="7" rx="1.6"/><rect x="64" y="4" width="1.6" height="4" rx=".8" opacity=".5"/></svg></div><video src="media/rhythmoji.mp4" poster="media/rhythmoji.jpg" autoplay muted loop playsinline aria-label="Rhythmoji gameplay"></video><div class="home"></div></div></a></figure>
+      <h2>Rhythmoji</h2><time>2026</time>
+      <a class="play" href="https://www.snapchat.com/lens/8f943ca0563544a98f3d4382113056e3" target="_blank" rel="noopener" aria-label="Play Rhythmoji on Snapchat">Play on Snapchat<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+    </li>
+
+    <li data-project="blockle">
+      <figure><a class="phone" href="https://blockle.dev" target="_blank" rel="noopener" aria-label="Play blockle on the web"><div class="screen" style="background: #161c23"><div class="status"><span>9:41</span><svg viewBox="0 0 66 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="6" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><path d="M30 2.2a10 10 0 0 1 7 2.9l1.3-1.4A12 12 0 0 0 30 .3a12 12 0 0 0-8.3 3.4L23 5.1a10 10 0 0 1 7-2.9zm0 4a6 6 0 0 1 4.1 1.6l1.4-1.4A8 8 0 0 0 30 4.2a8 8 0 0 0-5.5 2.2l1.4 1.4A6 6 0 0 1 30 6.2zm0 4l-2.4 1.6L30 12l2.4-1.8z"/><rect x="43" y=".5" width="20" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".5"/><rect x="45" y="2.5" width="16" height="7" rx="1.6"/><rect x="64" y="4" width="1.6" height="4" rx=".8" opacity=".5"/></svg></div><video src="media/blockle.mp4" poster="media/blockle.jpg" autoplay muted loop playsinline aria-label="blockle gameplay"></video><div class="home"></div></div></a></figure>
+      <h2>blockle</h2><time>2025</time>
+      <a class="play" href="https://blockle.dev" target="_blank" rel="noopener" aria-label="Play blockle on the web">Play on Web<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+    </li>
+
+    <li data-project="dayhub" class="old">
+      <figure><div class="phone"><video src="media/dayhub.mp4" poster="media/dayhub-poster.jpg" autoplay muted loop playsinline aria-label="DayHub widgets showing events and reminders on the home screen"></video></div></figure>
+      <h2>DayHub</h2><time>2021–2024</time>
+      <p>A widget that combines your calendar and reminders into one clean timeline.</p>
+    </li>
+
+    <li data-project="codehop" class="old">
+      <figure><div class="phone classic"><video src="media/codehop.mp4" poster="media/codehop-poster.jpg" autoplay muted loop playsinline aria-label="CodeHop: a multiple-choice C++ question"></video></div></figure>
+      <h2>CodeHop</h2><time>2018–2024</time>
+      <p>Super lightweight quiz app to prep for coding interviews and exams on the go.</p>
+    </li>
+
+    <li data-project="totem" class="old">
+      <figure><div class="phone"><video src="media/totem.mp4" poster="media/totem-poster.jpg" autoplay muted loop playsinline aria-label="Totem: a ranked list in the app"></video></div></figure>
+      <h2>Totem</h2><time>2016–2024</time>
+      <p>Make lists and rank your favorite things. See your friends' rankings and everyone's rankings combined.</p>
+    </li>
+
+    <li data-project="freshman15" class="old">
+      <figure><div class="phone classic"><video src="media/freshman15.mp4" poster="media/freshman15-poster.jpg" autoplay muted loop playsinline aria-label="Freshman 15: a dining hall menu"></video></div></figure>
+      <h2>Freshman 15</h2><time>2015–2018</time>
+      <p>A faster, cleaner dining hall app that shows nutrition top level. Reached thousands of daily users.</p>
+    </li>
+  </ol>
+</main>
+
+<div class="possum" hidden aria-hidden="true">
+  <img src="media/opossum.png" alt="">
+</div>
+
+<script>
+// Older projects: tap the phone and the opossum pops up from the bottom of its screen and grumbles.
+const possum = document.querySelector('.possum');
+let audio, timer;
+
+function squeak() {
+  audio ??= new AudioContext();
+  const t0 = audio.currentTime;
+  // Grumpy whine: a short "hmph", then a low, nasal "mnnyeehhh" that sags at the end.
+  const voice = (t, len, path, peak) => {
+    const o = audio.createOscillator(), f = audio.createBiquadFilter(), g = audio.createGain();
+    const lfo = audio.createOscillator(), lg = audio.createGain();
+    o.type = 'sawtooth';
+    o.frequency.setValueAtTime(path[0][1], t);
+    path.forEach(([at, hz]) => o.frequency.exponentialRampToValueAtTime(hz, t + at));
+    lfo.frequency.value = 7; lg.gain.value = 9;
+    lfo.connect(lg).connect(o.frequency);
+    f.type = 'lowpass'; f.Q.value = 9;
+    f.frequency.setValueAtTime(500, t);
+    f.frequency.linearRampToValueAtTime(1300, t + len * 0.35);
+    f.frequency.linearRampToValueAtTime(650, t + len);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(peak, t + 0.04);
+    g.gain.setValueAtTime(peak, t + len * 0.75);
+    g.gain.exponentialRampToValueAtTime(0.001, t + len);
+    o.connect(f).connect(g).connect(audio.destination);
+    o.start(t); lfo.start(t); o.stop(t + len); lfo.stop(t + len);
+  };
+  voice(t0, 0.16, [[0, 150], [0.16, 120]], 0.18);
+  voice(t0 + 0.24, 0.95, [[0, 190], [0.18, 260], [0.6, 210], [0.95, 140]], 0.2);
+}
+
+document.querySelectorAll('li.old figure').forEach(fig => fig.addEventListener('click', () => {
+  fig.querySelector('.phone').append(possum);
+  possum.hidden = true; void possum.offsetWidth; possum.hidden = false;
+  squeak();
+  clearTimeout(timer);
+  timer = setTimeout(() => possum.hidden = true, 3300);
+}));
+
+// Name shrinks into the glass header over the first 160px of scroll.
+const root = document.documentElement;
+const header = document.querySelector('header');
+const scrollDriven = CSS.supports('animation-timeline: scroll()');
+let ticking = false;
+const onScroll = () => {
+  ticking = false;
+  if (!scrollDriven) header.style.setProperty('--p', Math.min(1, Math.max(0, scrollY / 160)).toFixed(3));
+  root.classList.toggle('soft', scrollY < 80);
+  header.classList.toggle('docked', scrollY >= 160);
+};
+addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+onScroll();
+
+// While the work is still soft, a tap brings that project into view instead of triggering it.
+document.querySelector('main').addEventListener('click', e => {
+  if (!root.classList.contains('soft')) return;
+  e.preventDefault(); e.stopPropagation();
+  const li = e.target.closest('li');
+  (li || e.currentTarget).scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+}, true);
+
+// Reveal each project once.
+const reveal = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); reveal.unobserve(e.target); }
+}), { rootMargin: '0px 0px -10% 0px' });
+document.querySelectorAll('li').forEach(li => reveal.observe(li));
+
+// Videos play only while on screen.
+const playing = new IntersectionObserver(entries => entries.forEach(e => {
+  e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause();
+}), { threshold: 0.2 });
+document.querySelectorAll('video').forEach(v => playing.observe(v));
+</script>
+
+</body>
 </html>
