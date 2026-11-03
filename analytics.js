@@ -9,7 +9,7 @@
 
   // Only these events, and only these parameter values, ever leave the page.
   const projects = new Set(['rhythmoji', 'blockle', 'dayhub', 'codehop', 'totem', 'freshman15']);
-  const sources = new Set(['button', 'phone']);
+  const sources = new Set(['button', 'snapchat', 'phone']);
   const allowedEvents = new Set(['project_view', 'game_play', 'opossum', 'soft_tap']);
   window.siteAnalytics = (name, parameters = {}) => {
     if (!allowedEvents.has(name)) return;
@@ -44,7 +44,8 @@
     if (document.documentElement.classList.contains('soft')) {
       window.siteAnalytics('soft_tap', { project });
     } else if (target.closest('a.play')) {
-      window.siteAnalytics('game_play', { project, source: 'button' });
+      // A second button names its own source, such as data-source="snapchat".
+      window.siteAnalytics('game_play', { project, source: target.closest('a.play').dataset?.source || 'button' });
     } else if (target.closest('a.phone')) {
       window.siteAnalytics('game_play', { project, source: 'phone' });
     } else if (target.closest('li.old figure')) {

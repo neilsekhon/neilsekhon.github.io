@@ -152,6 +152,9 @@ h2 { font-size: 40px; font-weight: 600; line-height: 1.05; letter-spacing: -0.03
 .play:hover svg { transform: translate(2px, -2px); }
 .play:active { background: #d4d4d4; }
 .play:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+/* Two or more buttons side by side. */
+.plays { grid-column: 2; grid-row: 4; justify-self: start; margin-top: 24px; display: flex; flex-wrap: wrap; gap: 10px; }
+.plays .play { margin-top: 0; }
 time { display: block; color: var(--muted); font-size: 16px; line-height: 1; font-variant-numeric: tabular-nums; margin-top: 14px; }
 
 li p { color: var(--body); margin-top: 20px; max-width: 30em; }
@@ -164,8 +167,9 @@ li p { color: var(--body); margin-top: 20px; max-width: 30em; }
   ol { gap: 88px; padding-bottom: 96px; }
   li { grid-template-columns: 1fr; grid-template-rows: none; text-align: center; }
   li figure { grid-column: 1; grid-row: auto; margin-bottom: 24px; }
-  li h2, li time, li p, .play { grid-column: 1; grid-row: auto; }
-  .play { justify-self: center; }
+  li h2, li time, li p, .play, .plays { grid-column: 1; grid-row: auto; }
+  .play, .plays { justify-self: center; }
+  .plays { justify-content: center; }
   h2 { font-size: 32px; }
   li figure { width: 72%; margin-inline: auto; }
 }
@@ -212,9 +216,12 @@ li.old figure { cursor: pointer; -webkit-tap-highlight-color: transparent; }
     </li>
 
     <li data-project="blockle">
-      <figure><a class="phone" href="https://blockle.dev" target="_blank" rel="noopener" aria-label="Play blockle on the web"><div class="screen" style="background: #161c23"><div class="status"><span>9:41</span><svg viewBox="0 0 66 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="6" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><path d="M30 2.2a10 10 0 0 1 7 2.9l1.3-1.4A12 12 0 0 0 30 .3a12 12 0 0 0-8.3 3.4L23 5.1a10 10 0 0 1 7-2.9zm0 4a6 6 0 0 1 4.1 1.6l1.4-1.4A8 8 0 0 0 30 4.2a8 8 0 0 0-5.5 2.2l1.4 1.4A6 6 0 0 1 30 6.2zm0 4l-2.4 1.6L30 12l2.4-1.8z"/><rect x="43" y=".5" width="20" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".5"/><rect x="45" y="2.5" width="16" height="7" rx="1.6"/><rect x="64" y="4" width="1.6" height="4" rx=".8" opacity=".5"/></svg></div><video src="media/blockle.mp4" poster="media/blockle.jpg" autoplay muted loop playsinline aria-label="blockle gameplay"></video><div class="home"></div></div></a></figure>
+      <figure><a class="phone" href="https://neilsekhon.com/blockle/" target="_blank" rel="noopener" aria-label="Play blockle on the web"><div class="screen" style="background: #161c23"><div class="status"><span>9:41</span><svg viewBox="0 0 66 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="6" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><path d="M30 2.2a10 10 0 0 1 7 2.9l1.3-1.4A12 12 0 0 0 30 .3a12 12 0 0 0-8.3 3.4L23 5.1a10 10 0 0 1 7-2.9zm0 4a6 6 0 0 1 4.1 1.6l1.4-1.4A8 8 0 0 0 30 4.2a8 8 0 0 0-5.5 2.2l1.4 1.4A6 6 0 0 1 30 6.2zm0 4l-2.4 1.6L30 12l2.4-1.8z"/><rect x="43" y=".5" width="20" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".5"/><rect x="45" y="2.5" width="16" height="7" rx="1.6"/><rect x="64" y="4" width="1.6" height="4" rx=".8" opacity=".5"/></svg></div><video src="media/blockle.mp4" poster="media/blockle.jpg" autoplay muted loop playsinline aria-label="blockle gameplay"></video><div class="home"></div></div></a></figure>
       <h2>blockle</h2><time>2025</time>
-      <a class="play" href="https://blockle.dev" target="_blank" rel="noopener" aria-label="Play blockle on the web">Play on Web<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+      <div class="plays">
+        <a class="play" href="https://neilsekhon.com/blockle/" target="_blank" rel="noopener" aria-label="Play blockle on the web">Play on Web<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+        <a class="play" href="https://snapchat.com/t/BsSxJzqz" target="_blank" rel="noopener" aria-label="Play blockle on Snapchat" data-source="snapchat">Play on Snapchat<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+      </div>
     </li>
 
     <li data-project="dayhub" class="old">

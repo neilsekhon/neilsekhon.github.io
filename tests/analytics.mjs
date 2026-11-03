@@ -52,6 +52,9 @@ assert.equal(config.allow_google_signals, false);
 
 run.handlers.click({ target: target('rhythmoji', 'a.play') });
 same(run.events().at(-1), ['event', 'game_play', { project: 'rhythmoji', source: 'button' }]);
+const snap = { closest: sel => sel === '[data-project]' ? { dataset: { project: 'blockle' } } : sel === 'a.play' ? { dataset: { source: 'snapchat' } } : null };
+run.handlers.click({ target: snap });
+same(run.events().at(-1), ['event', 'game_play', { project: 'blockle', source: 'snapchat' }]);
 run.handlers.click({ target: target('blockle', 'a.phone') });
 same(run.events().at(-1), ['event', 'game_play', { project: 'blockle', source: 'phone' }]);
 run.handlers.click({ target: target('totem', 'li.old figure') });
