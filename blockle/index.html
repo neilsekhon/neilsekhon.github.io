@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <!-- Google Analytics (G-ZWZ2YEXHEV). Production hosts only, so local
+         previews and preview channels stay out of the reports. -->
+    <script>
+      (function () {
+        var hosts = ["neilsekhon.com", "www.neilsekhon.com", "blockle.dev"];
+        if (hosts.indexOf(location.hostname) === -1) return;
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () {
+          dataLayer.push(arguments);
+        };
+        gtag("js", new Date());
+        gtag("config", "G-ZWZ2YEXHEV");
+        var tag = document.createElement("script");
+        tag.async = true;
+        tag.src = "https://www.googletagmanager.com/gtag/js?id=G-ZWZ2YEXHEV";
+        document.head.appendChild(tag);
+      })();
+    </script>
+    <title>blockle</title>
+    <link rel="icon" type="image/svg+xml" href="/blockle/images/blockle_b.svg" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* =========================================================
+         Blockle Design System
+         ---------------------------------------------------------
+         Typography
+           • Geist — UI sans (variable, optical-tight)
+           • Instrument Serif — editorial display accent
+         Surfaces
+           • Solid surface tokens stay for opaque needs (board, raised cards).
+           • A separate "glass" tier carries translucent + blurred panels
+             (header, piece bank, side menu, modals). Glass surfaces are
+             intentionally low-tint so the ambient gradient and board read
+             through them, giving the app an Apple-style liquid feel.
+         Color
+           • Per-puzzle theme overrides --accent / --accent-2 / ambient layers,
+             so glass surfaces pick up tinted hue from the live palette.
+           • State indicators (completion, progress, etc.) MUST stay
+             monochrome — use neutral glass + text tokens, not puzzle
+             accents or --success. Status meaning has to read the same
+             across every palette, and a per-puzzle accent on a
+             "completed" affordance is ambiguous against the themed
+             chrome around it.
+         ========================================================= */
+      :root {
+        /* Surfaces — solid */
+        --surface-base:      #14110f;
+        --surface-sunken:    #0d0b0a;
+        --surface-elevated:  #1c1815;
+        --surface-raised:    #26211d;
+        --surface-hover:     #322b26;
+        --surface-overlay:   rgba(20, 17, 15, 0.62);
+
+        /* Glass — translucent, blurred */
+        --glass-tint:           rgba(255, 250, 244, 0.045);
+        --glass-tint-strong:    rgba(255, 250, 244, 0.085);
+        --glass-tint-hover:     rgba(255, 250, 244, 0.12);
+        --glass-border:         rgba(255, 250, 244, 0.14);
+        --glass-border-strong:  rgba(255, 250, 244, 0.22);
+        --glass-highlight:      rgba(255, 255, 255, 0.16);
+        --glass-shadow:         0 18px 44px rgba(0, 0, 0, 0.38),
+                                0 2px 8px rgba(0, 0, 0, 0.25);
+        --glass-blur:           24px;
+        --glass-saturate:       180%;
+
+        /* Borders (solid surfaces) */
+        --border-subtle:  rgba(255, 236, 212, 0.06);
+        --border-default: rgba(255, 236, 212, 0.10);
+        --border-strong:  rgba(255, 236, 212, 0.16);
+
+        /* Text */
+        --text-primary:   #faf8f5;
+        --text-secondary: #c8c0b6;
+        --text-muted:     #8a8278;
+        --text-faint:     #5c554e;
+
+        /* Accents */
+        --accent:         #fb923c;
+        --accent-strong:  #f97316;
+        --accent-soft:    rgba(251, 146, 60, 0.14);
+        --accent-glow:    rgba(251, 146, 60, 0.35);
+        --accent-ring:    rgba(251, 146, 60, 0.45);
+        --accent-2:       #fb7185;
+
+        /* Status */
+        --success:        #34d399;
+        --success-soft:   rgba(52, 211, 153, 0.14);
+        --success-glow:   rgba(52, 211, 153, 0.65);
+        --warning:        #fcd34d;
+
+        /* Grid + ambient */
+        --grid-line: rgba(255, 236, 212, 0.06);
+        --ambient-1: rgba(251, 146, 60, 0.22);
+        --ambient-2: rgba(251, 113, 133, 0.18);
+        --ambient-3: rgba(129, 140, 248, 0.20);
+        --ambient-4: rgba(52, 211, 153, 0.18);
+
+        /* Elevation */
+        --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md:  0 4px 14px rgba(0, 0, 0, 0.45);
+        --shadow-lg:  0 14px 32px rgba(0, 0, 0, 0.55),
+                      0 2px 6px rgba(0, 0, 0, 0.35);
+        --shadow-accent: 0 10px 30px var(--accent-glow);
+
+        /* Radii */
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 18px;
+        --radius-xl: 24px;
+        --radius-pill: 999px;
+
+        /* Type */
+        --font-sans: "Geist", -apple-system, BlinkMacSystemFont,
+                     "SF Pro Text", "Segoe UI", sans-serif;
+        --font-display: "Instrument Serif", "Geist", Georgia, serif;
+      }
+
+      html, body {
+        background-color: var(--surface-base);
+      }
+      body {
+        font-family: var(--font-sans);
+        color: var(--text-primary);
+        font-feature-settings: "ss01", "cv11", "cv05";
+        letter-spacing: -0.01em;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      /* Ambient radial glow — two oversized pseudo-elements that counter-rotate
+         behind the app shell. Four phased color variables sample different
+         points in the puzzle palette, keeping several hues visible without a
+         per-frame color repaint loop.
+
+         Sizing > 100vmax means rotation never exposes an edge, and
+         will-change keeps everything on the compositor. */
+      .app-shell {
+        position: relative;
+        isolation: isolate;
+        transition: background-color 0.6s ease, color 0.6s ease;
+      }
+      .app-shell::before,
+      .app-shell::after {
+        content: "";
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        width: 160vmax;
+        height: 160vmax;
+        z-index: -1;
+        pointer-events: none;
+        transform-origin: center center;
+        will-change: transform;
+      }
+      .app-shell::before {
+        background-image:
+          radial-gradient(circle at 30% 28%, var(--ambient-1), transparent 42%),
+          radial-gradient(circle at 73% 70%, var(--ambient-2), transparent 44%),
+          radial-gradient(circle at 52% 46%, var(--ambient-3), transparent 56%);
+        animation: ambient-drift 64s linear infinite;
+      }
+      .app-shell::after {
+        background-image:
+          radial-gradient(circle at 76% 26%, var(--ambient-3), transparent 42%),
+          radial-gradient(circle at 25% 72%, var(--ambient-4), transparent 44%),
+          radial-gradient(circle at 49% 52%, var(--ambient-2), transparent 58%);
+        animation: ambient-drift-rev 92s linear infinite;
+        mix-blend-mode: screen;
+      }
+      @keyframes ambient-drift {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to   { transform: translate(-50%, -50%) rotate(360deg); }
+      }
+      @keyframes ambient-drift-rev {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to   { transform: translate(-50%, -50%) rotate(-360deg); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .app-shell::before,
+        .app-shell::after {
+          animation: none;
+        }
+      }
+      ::selection {
+        background: var(--accent-soft);
+        color: var(--text-primary);
+      }
+
+      /* ---------- Semantic utility classes (token-driven) ---------- */
+      .surface-base      { background-color: var(--surface-base); }
+      .surface-sunken    { background-color: var(--surface-sunken); }
+      .surface-elevated  { background-color: var(--surface-elevated); }
+      .surface-raised    { background-color: var(--surface-raised); }
+
+      .text-primary      { color: var(--text-primary); }
+      .text-secondary    { color: var(--text-secondary); }
+      .text-muted        { color: var(--text-muted); }
+      .text-faint        { color: var(--text-faint); }
+      .text-accent       { color: var(--accent); }
+      .text-success      { color: var(--success); }
+      .text-warning      { color: var(--warning); }
+
+      .border-subtle     { border-color: var(--border-subtle); }
+      .border-default    { border-color: var(--border-default); }
+      .border-strong     { border-color: var(--border-strong); }
+
+      /* ---------- Apple-style Liquid Glass ---------- */
+      /* Two tiers. Both use a saturated backdrop blur so warm tones from
+         the ambient gradient bleed through the panel; an inset top
+         highlight mimics the bright meniscus on a glass edge. */
+      .glass {
+        background-color: var(--glass-tint);
+        backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+        border: 1px solid var(--glass-border);
+        box-shadow:
+          inset 0 1px 0 var(--glass-highlight),
+          var(--glass-shadow);
+      }
+      .glass-strong {
+        background-color: var(--glass-tint-strong);
+        backdrop-filter: blur(32px) saturate(200%);
+        -webkit-backdrop-filter: blur(32px) saturate(200%);
+        border: 1px solid var(--glass-border);
+        box-shadow:
+          inset 0 1px 0 var(--glass-highlight),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+          0 30px 80px rgba(0, 0, 0, 0.55);
+      }
+      /* Glass surface that holds a top edge but no bottom edge — for the
+         piece bank docked to the bottom of the viewport. */
+      .glass-dock-bottom {
+        background-color: var(--glass-tint);
+        backdrop-filter: blur(28px) saturate(190%);
+        -webkit-backdrop-filter: blur(28px) saturate(190%);
+        border-top: 1px solid var(--glass-border);
+        box-shadow:
+          inset 0 1px 0 var(--glass-highlight),
+          0 -16px 48px rgba(0, 0, 0, 0.32);
+      }
+      .glass-dock-top {
+        background-color: var(--glass-tint);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-bottom: 1px solid var(--glass-border);
+      }
+
+      /* ---------- Glass interactive controls ---------- */
+      .btn-glass {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1rem;
+        border-radius: var(--radius-md);
+        background-color: var(--glass-tint);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid var(--glass-border);
+        color: var(--text-primary);
+        font-weight: 500;
+        letter-spacing: -0.005em;
+        transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+        box-shadow: inset 0 1px 0 var(--glass-highlight);
+      }
+      .btn-glass:hover {
+        background-color: var(--glass-tint-hover);
+        border-color: var(--glass-border-strong);
+      }
+      .btn-glass:active { transform: scale(0.97); }
+
+      .btn-icon {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-pill);
+        background-color: var(--glass-tint);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid var(--glass-border);
+        color: var(--text-secondary);
+        box-shadow: inset 0 1px 0 var(--glass-highlight);
+        transition: color 160ms ease, background-color 160ms ease,
+                    border-color 160ms ease, transform 160ms ease;
+      }
+      .btn-icon:hover {
+        color: var(--text-primary);
+        background-color: var(--glass-tint-hover);
+        border-color: var(--glass-border-strong);
+      }
+      .btn-icon:active { transform: scale(0.92); }
+
+      /* ---------- Typography utilities ---------- */
+      .display-title {
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-style: italic;
+        letter-spacing: -0.005em;
+        line-height: 1;
+      }
+      .ui-title {
+        font-family: var(--font-sans);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+      .ui-label {
+        font-family: var(--font-sans);
+        font-weight: 500;
+        letter-spacing: -0.005em;
+      }
+      .level-number-label {
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: -0.005em;
+        font-variant-numeric: tabular-nums;
+      }
+      .level-title-label {
+        font-family: var(--font-sans);
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 0;
+        line-height: 1.15;
+        color: var(--text-primary);
+      }
+      .menu-progress-label {
+        font-family: var(--font-sans);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        color: var(--text-secondary);
+        font-variant-numeric: tabular-nums;
+      }
+      .menu-size-label {
+        font-family: var(--font-sans);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        color: var(--text-secondary);
+        font-variant-numeric: tabular-nums;
+      }
+      .menu-level-button {
+        font-family: var(--font-sans);
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 500;
+        letter-spacing: -0.005em;
+      }
+      .menu-level-number-badge {
+        font-family: var(--font-sans);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: -0.005em;
+        font-variant-numeric: tabular-nums;
+      }
+      .menu-footer-label {
+        font-family: var(--font-sans);
+        font-size: 10px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--text-secondary);
+      }
+      .eyebrow {
+        font-family: var(--font-sans);
+        font-size: 10.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--text-muted);
+      }
+      .eyebrow-sub {
+        font-family: var(--font-sans);
+        font-size: 10px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--text-faint);
+      }
+
+      /* Custom scrollbar for the bank */
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      /* Shimmer animation for skeleton loader */
+      @keyframes shimmer {
+        0%   { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+      }
+      .animate-shimmer {
+        animation: shimmer 2s infinite;
+      }
+
+      /* First-level drag hint — a translucent ghost of the first bank piece
+         that rises from below the board into its solution slot, paired with
+         a "tap" pulse on top. The keyframes use a CSS variable for the
+         vertical travel distance so the same animation works at any
+         cellSize. Loops until the player places a piece. */
+      @keyframes hint-piece-rise {
+        0%   { transform: translateY(var(--hint-rise-from, 120px)); opacity: 0; }
+        18%  { opacity: 0.85; }
+        55%  { transform: translateY(0);                              opacity: 0.85; }
+        80%  { transform: translateY(0);                              opacity: 0.85; }
+        100% { transform: translateY(0);                              opacity: 0; }
+      }
+      .hint-piece {
+        animation: hint-piece-rise 3.6s linear infinite;
+        will-change: transform, opacity;
+      }
+      @keyframes hint-tap-pulse {
+        0%, 100% { transform: scale(0.85); opacity: 0; }
+        18%      { transform: scale(1);    opacity: 0.95; }
+        55%      { transform: scale(1);    opacity: 0.95; }
+        80%      { transform: scale(1.25); opacity: 0; }
+      }
+      .hint-tap {
+        animation: hint-tap-pulse 3.6s linear infinite;
+        will-change: transform, opacity;
+      }
+
+      /* "More Levels" menu hint — floating label under the menu button.
+         The arrow bounces vertically to point up at the menu icon. */
+      @keyframes menu-hint-arrow-bounce {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-6px); }
+      }
+      .menu-hint-arrow {
+        animation: menu-hint-arrow-bounce 1.1s ease-in-out infinite;
+        filter: drop-shadow(0 2px 6px rgba(0,0,0,0.55))
+                drop-shadow(0 0 10px rgba(0,0,0,0.3));
+        will-change: transform;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .hint-piece, .hint-tap { animation: none; opacity: 0.7; }
+        .menu-hint-arrow { animation: none; }
+      }
+
+      /* Board victory glow burst — uses the puzzle's own accent colors via
+         CSS variables so each level glows in its own palette. */
+      .board-win-glow {
+        animation: board-win 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+      @keyframes board-win {
+        0%   { box-shadow: 0 0 0 transparent, 0 0 0 transparent; }
+        35%  { box-shadow: 0 0 55px var(--accent-glow), 0 0 110px var(--accent-soft); }
+        100% { box-shadow: 0 0 28px var(--accent-soft), 0 0 0 transparent; }
+      }
+
+      /* Completion bank CTA — a calm, oversized next-level action that keeps
+         the glass chrome and borrows the active puzzle colors as soft depth. */
+      @keyframes next-bank-arrow {
+        0%, 100% { transform: translateX(0); }
+        45%      { transform: translateX(4px); }
+      }
+      .next-level-bank-cta {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        width: min(520px, calc(100vw - 32px));
+        min-height: 92px;
+        padding: 0 32px;
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+        font: inherit;
+        letter-spacing: 0;
+        text-align: center;
+        color: var(--text-primary);
+        background:
+          radial-gradient(circle at 22% 18%, var(--accent-soft), transparent 34%),
+          radial-gradient(circle at 78% 86%, var(--accent-glow), transparent 42%),
+          linear-gradient(180deg, var(--glass-tint-strong), rgba(255, 250, 244, 0.035));
+        border: 1px solid var(--glass-border-strong);
+        border-radius: var(--radius-xl);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.2),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.26),
+          0 18px 38px rgba(0, 0, 0, 0.26);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        transition:
+          background-color 180ms ease,
+          filter 180ms ease,
+          transform 180ms ease;
+      }
+      .next-level-bank-cta::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 14px;
+        width: min(360px, calc(100% - 64px));
+        height: 1px;
+        transform: translateX(-50%);
+        background: linear-gradient(90deg, transparent, var(--accent-ring), transparent);
+        opacity: 0.7;
+      }
+      .next-level-bank-cta:hover {
+        filter: brightness(1.06) saturate(1.04);
+      }
+      .next-level-bank-cta:active {
+        transform: translateY(1px);
+      }
+      .next-level-bank-cta__label {
+        font-size: 21px;
+        line-height: 1;
+        font-weight: 600;
+        letter-spacing: 0;
+      }
+      .next-level-bank-cta__icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-primary);
+        animation: next-bank-arrow 1.25s ease-in-out infinite;
+        will-change: transform;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .next-level-bank-cta__icon {
+          animation: none;
+        }
+      }
+
+      /* Staggered cell pop-in for won board */
+      @keyframes cell-pop {
+        0%   { transform: scale(1); }
+        45%  { transform: scale(1.06); }
+        100% { transform: scale(1); }
+      }
+      .cell-pop {
+        animation: cell-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      /* Focus ring for accessible interactive elements */
+      .focus-ring:focus-visible {
+        outline: 2px solid var(--accent-ring);
+        outline-offset: 2px;
+      }
+    </style>
+    <script type="module" crossorigin src="/blockle/assets/index-D5mP4O37.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

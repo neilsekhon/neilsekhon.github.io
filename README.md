@@ -24,6 +24,7 @@ any local changes have first been committed and pushed.
 
 - `index.html`: the whole page, with its styles and scripts inline.
 - `analytics.js`: Google Analytics, production hosts only.
+- `blockle/`: the built blockle game, served at https://neilsekhon.com/blockle/. Don't edit it by hand: it is generated from the private `neilsekhon/blockle` repo with `npm run publish:site` (see its `DEPLOYMENT.md`).
 - `media/`: project videos, posters, and the easter-egg sticker.
 - `fonts/`: Geist.
 - `favicon.png`, `apple-touch-icon.png`: tab and home-screen icons.
