@@ -1,0 +1,52 @@
+<svg width="280" height="60" viewBox="0 0 280 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Global Styles -->
+  <defs>
+    <style>
+      rect { width: 10px; height: 10px; rx: 2px; }
+    </style>
+  </defs>
+
+  <!-- Letter 'b' (Purple) -->
+  <g fill="#8b5cf6" transform="translate(0, 0)">
+    <rect x="0" y="0" /> <rect x="0" y="12" /> <rect x="0" y="24" /> <rect x="0" y="36" /> <rect x="0" y="48" /> <!-- Spine -->
+    <rect x="12" y="24" /> <rect x="12" y="48" /> <!-- Top/Bottom of loop -->
+    <rect x="24" y="24" /> <rect x="24" y="36" /> <rect x="24" y="48" /> <!-- Right side -->
+  </g>
+
+  <!-- Letter 'l' (Teal) -->
+  <g fill="#00cc99" transform="translate(42, 0)">
+    <rect x="0" y="0" /> <rect x="0" y="12" /> <rect x="0" y="24" /> <rect x="0" y="36" /> <rect x="0" y="48" />
+  </g>
+
+  <!-- Letter 'o' (Yellow) -->
+  <g fill="#fbbf24" transform="translate(60, 0)">
+    <rect x="0" y="24" /> <rect x="0" y="36" /> <rect x="0" y="48" /> <!-- Left -->
+    <rect x="12" y="24" /> <rect x="12" y="48" /> <!-- Top/Bottom -->
+    <rect x="24" y="24" /> <rect x="24" y="36" /> <rect x="24" y="48" /> <!-- Right -->
+  </g>
+
+  <!-- Letter 'c' (Pink) -->
+  <g fill="#ff66b2" transform="translate(102, 0)">
+    <rect x="0" y="24" /> <rect x="0" y="36" /> <rect x="0" y="48" /> <!-- Spine -->
+    <rect x="12" y="24" /> <rect x="12" y="48" /> <!-- Top/Bottom Arms -->
+  </g>
+
+  <!-- Letter 'k' (Purple) -->
+  <g fill="#8b5cf6" transform="translate(132, 0)">
+    <rect x="0" y="0" /> <rect x="0" y="12" /> <rect x="0" y="24" /> <rect x="0" y="36" /> <rect x="0" y="48" /> <!-- Spine -->
+    <rect x="12" y="36" /> <!-- Middle Bridge -->
+    <rect x="24" y="24" /> <rect x="24" y="48" /> <!-- Ears/Legs -->
+  </g>
+
+  <!-- Letter 'l' (Teal) -->
+  <g fill="#00cc99" transform="translate(172, 0)">
+    <rect x="0" y="0" /> <rect x="0" y="12" /> <rect x="0" y="24" /> <rect x="0" y="36" /> <rect x="0" y="48" />
+  </g>
+
+  <!-- Letter 'e' (Pink) -->
+  <g fill="#ff66b2" transform="translate(190, 0)">
+    <rect x="0" y="24" /> <rect x="0" y="36" /> <rect x="0" y="48" /> <!-- Spine -->
+    <rect x="12" y="24" /> <rect x="12" y="36" /> <rect x="12" y="48" /> <!-- Middle -->
+    <rect x="24" y="24" /> <rect x="24" y="48" /> <!-- Tips -->
+  </g>
+</svg>
