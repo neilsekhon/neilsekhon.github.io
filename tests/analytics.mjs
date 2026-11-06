@@ -60,6 +60,12 @@ same(run.events().at(-1), ['event', 'game_play', { project: 'blockle', source: '
 run.handlers.click({ target: target('totem', 'li.old figure') });
 same(run.events().at(-1), ['event', 'opossum', { project: 'totem' }]);
 
+const dl = { closest: sel => sel === '[data-project]' ? { dataset: { project: 'output-styles' } } : sel === 'a[download]' ? { dataset: { file: 'v2' } } : null };
+run.handlers.click({ target: dl });
+same(run.events().at(-1), ['event', 'download', { project: 'output-styles', file: 'v2' }]);
+run.context.siteAnalytics('download', { project: 'output-styles', file: 'secret' });
+same(run.events().at(-1), ['event', 'download', { project: 'output-styles' }]);
+
 const soft = setup('neilsekhon.com', { soft: true });
 soft.handlers.click({ target: target('rhythmoji', 'a.play') });
 same(soft.events().at(-1), ['event', 'soft_tap', { project: 'rhythmoji' }]);

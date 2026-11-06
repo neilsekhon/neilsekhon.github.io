@@ -8,14 +8,16 @@
   function gtag() { window.dataLayer.push(arguments); }
 
   // Only these events, and only these parameter values, ever leave the page.
-  const projects = new Set(['rhythmoji', 'blockle', 'dayhub', 'codehop', 'totem', 'freshman15']);
+  const projects = new Set(['rhythmoji', 'blockle', 'dayhub', 'codehop', 'totem', 'freshman15', 'output-styles']);
   const sources = new Set(['button', 'snapchat', 'phone']);
-  const allowedEvents = new Set(['project_view', 'game_play', 'opossum', 'soft_tap']);
+  const files = new Set(['v1', 'v2']);
+  const allowedEvents = new Set(['project_view', 'game_play', 'opossum', 'soft_tap', 'download']);
   window.siteAnalytics = (name, parameters = {}) => {
     if (!allowedEvents.has(name)) return;
     const safe = {};
     if (projects.has(parameters.project)) safe.project = parameters.project;
     if (name === 'game_play' && sources.has(parameters.source)) safe.source = parameters.source;
+    if (name === 'download' && files.has(parameters.file)) safe.file = parameters.file;
     gtag('event', name, safe);
   };
 
@@ -43,6 +45,9 @@
     if (!project) return;
     if (document.documentElement.classList.contains('soft')) {
       window.siteAnalytics('soft_tap', { project });
+    } else if (target.closest('a[download]')) {
+      // A download link names its file, such as data-file="v1".
+      window.siteAnalytics('download', { project, file: target.closest('a[download]').dataset?.file });
     } else if (target.closest('a.play')) {
       // A second button names its own source, such as data-source="snapchat".
       window.siteAnalytics('game_play', { project, source: target.closest('a.play').dataset?.source || 'button' });
