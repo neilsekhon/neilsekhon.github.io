@@ -6,7 +6,7 @@
 <title>neil sekhon</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<script src="analytics.js?v=3" defer></script>
+<script src="analytics.js?v=4" defer></script>
 <meta name="description" content="Neil Sekhon, designer + engineer. A timeline of my work.">
 <script>document.documentElement.classList.add('js', 'soft');</script>
 <style>
@@ -156,18 +156,85 @@ h2 { font-size: 40px; font-weight: 600; line-height: 1.05; letter-spacing: -0.03
 .plays { grid-column: 2; grid-row: 4; justify-self: start; margin-top: 24px; display: flex; flex-wrap: wrap; gap: 10px; }
 .plays { align-items: flex-start; }
 .plays .play { margin-top: 0; }
-.play-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.cap { color: var(--muted); font-size: 13px; line-height: 1; }
 time { display: block; color: var(--muted); font-size: 16px; line-height: 1; font-variant-numeric: tabular-nums; margin-top: 14px; }
 
 li p { color: var(--body); margin-top: 20px; max-width: 30em; }
 
 /* Output-style item: a wide image instead of a phone, words and downloads beneath. */
-li.wide { grid-template-columns: minmax(0, 760px); grid-template-rows: none; }
+li.wide { scroll-margin-top: 96px; grid-template-columns: minmax(0, 760px); grid-template-rows: none; }
 li.wide figure { grid-column: 1; grid-row: auto; margin-bottom: 40px; }
 li.wide figure img { display: block; width: 100%; height: auto; border-radius: 14px; box-shadow: 0 0 0 1px var(--line), 0 24px 48px -16px rgb(0 0 0 / 0.6); }
-li.wide h2, li.wide time, li.wide p, li.wide .dls { grid-column: 1; grid-row: auto; }
-.setup { display: block; margin-top: 14px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+li.wide h2, li.wide time, li.wide p, li.wide .dls, li.wide .setup { grid-column: 1; grid-row: auto; }
+.blurb { all: unset; box-sizing: border-box; cursor: pointer; color: var(--body); display: inline; -webkit-tap-highlight-color: transparent; transition: color .2s cubic-bezier(.165,.84,.44,1); }
+.blurb svg { display: inline-block; width: 15px; height: 15px; margin-left: 6px; vertical-align: -2px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s cubic-bezier(.165,.84,.44,1); }
+.blurb:hover, .blurb:focus-visible { color: var(--ink); }
+.blurb:hover svg { transform: translateX(3px); }
+.blurb:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+.zoom { display: block; width: 100%; cursor: zoom-in; border-radius: 14px; -webkit-tap-highlight-color: transparent; container-type: inline-size; }
+.zoom:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+.lightbox { border: 0; padding: 0; background: none; max-width: none; max-height: none; width: 100vw; height: 100vh; height: 100dvh; cursor: zoom-out; overflow-y: auto; overscroll-behavior: contain; }
+.lightbox[open] { display: flex; animation: lb-in .25s cubic-bezier(.165,.84,.44,1); }
+.lightbox::backdrop { background: rgb(10 10 10 / 0.86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.lb-body { display: flex; flex-direction: column; align-items: center; gap: 20px; margin: auto; padding: 88px 24px 200px; }
+.lb-text { width: min(100%, 36em); margin-top: 8px; padding: 28px 32px; cursor: auto; background: #111; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 24px 64px rgb(0 0 0 / 0.5); }
+.lb-body .setup { margin: -4px 0 0; text-align: center; max-width: 30em; }
+.lb-text p { color: var(--body); font-size: 17px; line-height: 1.6; max-width: none; margin: 0; }
+.lb-text p + p { margin-top: 16px; }
+.lb-close { position: fixed; top: max(20px, env(safe-area-inset-top)); right: max(20px, env(safe-area-inset-right)); z-index: 1; width: 40px; height: 40px; display: grid; place-items: center; padding: 0; border: 1px solid rgb(237 237 237 / 0.28); border-radius: 50%; background: rgb(10 10 10 / 0.78); color: var(--ink); cursor: pointer; box-shadow: 0 2px 12px rgb(0 0 0 / 0.35); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); transition: background .2s cubic-bezier(.165,.84,.44,1); }
+.lb-close svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.lb-close:hover { background: rgb(40 40 40 / 0.9); }
+.lb-close:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+html.lb-open { overflow: hidden; }
+.lb-body .dls { margin-top: 0; justify-content: center; }
+.lb-shot { width: min(94vw, 1600px, calc(72vh * 16 / 9)); container-type: inline-size; }
+
+/* Comparison graphic, drawn in HTML so it stays sharp and matches the dark page.
+   Everything is in em off one size that tracks the width of its container. */
+.cmp {
+  font-size: calc(100cqw / 72); line-height: 1.45; aspect-ratio: 16 / 9; width: 100%;
+  display: flex; flex-direction: column; gap: 1.25em; padding: 2.1em 2.5em;
+  background: #101010; color: rgb(237 237 237 / 0.78); border-radius: 0.64em;
+  box-shadow: 0 0 0 1px var(--line), 0 24px 48px -16px rgb(0 0 0 / 0.6); overflow: hidden; text-align: left;
+}
+.cmp-title { color: var(--ink); font-size: 1.3em; font-weight: 500; line-height: 1.2; letter-spacing: -0.02em; }
+.cmp-title span { color: var(--muted); }
+.cmp-row { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25em; }
+.cmp-col { display: flex; flex-direction: column; gap: 0.65em; min-height: 0; }
+.cmp-lab { display: flex; align-items: center; gap: 0.8em; color: var(--muted); font-size: 0.85em; line-height: 1; }
+.cmp-lab .tag { font: 500 0.9em/1 ui-monospace, "SF Mono", Menlo, monospace; }
+.cmp-lab b { display: inline-flex; align-items: center; gap: 0.55em; color: var(--ink); font-size: 1.1em; font-weight: 500; }
+.cmp-lab i { width: 0.5em; height: 0.5em; border-radius: 50%; background: var(--muted); }
+.cmp-lab .bad i { background: #f0707f; }
+.cmp-lab .good i { background: #4fcf99; }
+.cmp-card { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 0.65em; padding: 1.25em; overflow: hidden; background: #181818; border-radius: 0.9em; box-shadow: 0 0 0 1px rgb(237 237 237 / 0.07); }
+.cmp-q { align-self: flex-end; padding: 0.4em 0.95em; background: rgb(237 237 237 / 0.1); border-radius: 99em; color: var(--ink); font-size: 0.86em; font-weight: 500; line-height: 1.2; }
+.cmp p { max-width: none; margin: 0; color: inherit; }
+.cmp p.h { margin-top: 0.3em; color: var(--ink); font-weight: 600; }
+.cmp table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+.cmp th, .cmp td { padding: 0.35em 0.4em 0.35em 0; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+.cmp th { color: var(--muted); font-weight: 500; }
+.cmp td b { color: var(--ink); font-weight: 600; }
+
+@media (max-width: 560px) {
+  .lb-body { padding: 72px 16px 120px; gap: 16px; }
+  .lb-text { padding: 20px; margin-top: 12px; }
+  .lb-text p { font-size: 16px; }
+  .lb-close { top: max(14px, env(safe-area-inset-top)); right: max(14px, env(safe-area-inset-right)); width: 44px; height: 44px; }
+  /* On a phone the enlarged graphic becomes three readable cards in a stack. */
+  .lb-shot { width: 100%; }
+  .lightbox .cmp { font-size: 15px; aspect-ratio: auto; padding: 18px; gap: 18px; }
+  .lightbox .cmp-row { display: flex; flex-direction: column; gap: 22px; }
+  .lightbox .cmp-card { flex: none; padding: 16px; overflow: visible; gap: 10px; }
+  .lightbox .cmp-lab { font-size: 13px; }
+  .lightbox .cmp-title { font-size: 19px; }
+  .lb-body { align-items: flex-start; }
+  .lb-body .setup { text-align: left; }
+  .lb-body .dls { align-self: center; }
+  .lb-text { width: 100%; }
+}
+@keyframes lb-in { from { opacity: 0; transform: scale(.97); } }
+@media (prefers-reduced-motion: reduce) { .lightbox[open] { animation: none; } }
+.setup { grid-column: 1; margin-top: 16px; color: var(--muted); font-size: 14px; line-height: 1.5; }
 .setup code { font: 500 12.5px/1 ui-monospace, "SF Mono", Menlo, monospace; color: var(--body); }
 .dls { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
 .dl {
@@ -184,14 +251,14 @@ li.wide h2, li.wide time, li.wide p, li.wide .dls { grid-column: 1; grid-row: au
 .dl:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
 @media (max-width: 560px) {
-  .dls { justify-content: center; }
   li.wide figure { width: 100%; }
+  .dls { justify-content: center; }
   :root { --big: 40px; --small: 0.375; --pad: 72px; }
   main { padding: calc(var(--hero) + 88px) 16px 0; }
   header { padding-left: 16px; padding-right: 16px; }
   .social { right: 16px; }
   ol { gap: 88px; padding-bottom: 96px; }
-  li { grid-template-columns: 1fr; grid-template-rows: none; text-align: center; }
+  li { grid-template-columns: 1fr; grid-template-rows: none; }
   li figure { grid-column: 1; grid-row: auto; margin-bottom: 24px; }
   li h2, li time, li p, .play, .plays { grid-column: 1; grid-row: auto; }
   .play, .plays { justify-self: center; }
@@ -211,14 +278,14 @@ li.old figure { cursor: pointer; -webkit-tap-highlight-color: transparent; }
   position: absolute; left: 8%; bottom: 0; width: 84%; display: block;
   filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(0 -8px 20px rgb(0 0 0 / 0.5));
   transform-origin: 50% 100%;
-  animation: possum-in 3.2s ease-in-out both;
+  animation: possum-in 1.6s ease-in-out both;
 }
 @keyframes possum-in {
   0% { transform: translateY(110%); }
-  12% { transform: translateY(0) rotate(0); animation-timing-function: linear; }
-  16% { transform: rotate(7deg); } 22% { transform: rotate(-6deg); }
-  28% { transform: rotate(7deg); } 34% { transform: rotate(-6deg); }
-  39%, 86% { transform: translateY(0) rotate(0); }
+  24% { transform: translateY(0) rotate(0); animation-timing-function: linear; }
+  32% { transform: rotate(7deg); } 44% { transform: rotate(-6deg); }
+  56% { transform: rotate(7deg); } 68% { transform: rotate(-6deg); }
+  78% { transform: translateY(0) rotate(0); }
   100% { transform: translateY(110%); }
 }
 @media (prefers-reduced-motion: reduce) { .possum img { animation: none; } }
@@ -236,13 +303,39 @@ li.old figure { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 <main>
   <ol>
     <li data-project="output-styles" class="wide">
-      <figure><img src="media/output-styles.png" alt="The same question answered in the default style, v1 and v2. The default is a wall of text; v1 is organized into sections; v2 is a status table with next steps." width="1600" height="900" loading="lazy"></figure>
+      <figure><div class="zoom" role="button" tabindex="0" data-zoom aria-label="Enlarge: the same question answered in the default style, v1 and v2"><div class="cmp">
+          <div class="cmp-title">Same question, <span>three output styles</span></div>
+          <div class="cmp-row">
+            <div class="cmp-col"><div class="cmp-lab"><span class="tag">default</span><b class="bad"><i></i>verbose</b></div><div class="cmp-card">
+              <div class="cmp-q">where are we on the onboarding redesign</div>
+              <p>Good progress on the onboarding redesign! I've been working on several pieces at once using helper agents so things could move in parallel.</p>
+              <p>The new welcome screen is finished and the copy has been updated to match the latest brand guidelines. The permissions step is mostly done, although I ran into an issue where the camera prompt fires twice on Android, which I'm still looking into. I also started on the friend suggestions screen, but the API returned a 403, so I paused that work until we can sort out access, and in the meantime I…</p>
+            </div></div>
+            <div class="cmp-col"><div class="cmp-lab"><span class="tag">v1</span><b class="good"><i></i>organized</b></div><div class="cmp-card">
+              <div class="cmp-q">where are we on the onboarding redesign</div>
+              <p class="h">Changes made</p><p>• Welcome screen done</p>
+              <p class="h">Learnings</p><p>• Camera prompt fires twice on Android</p>
+              <p class="h">Action items for you</p><p>• Request friends API access</p>
+              <p class="h">Suggested next steps</p><p>• Fix the double prompt</p>
+            </div></div>
+            <div class="cmp-col"><div class="cmp-lab"><span class="tag">v2</span><b class="good"><i></i>parallel tasks</b></div><div class="cmp-card">
+              <div class="cmp-q">where are we on the onboarding redesign</div>
+              <p>1 of 3 tasks done. One needs you.</p>
+              <table><tr><th>Task</th><th>Status</th></tr>
+              <tr><td><b>Welcome screen</b></td><td>✅ Done</td></tr>
+              <tr><td><b>Permissions</b></td><td>🔄 Fixing double camera prompt</td></tr>
+              <tr><td><b>Friend suggestions</b></td><td>⛔ Needs API access</td></tr></table>
+              <p class="h">Next</p><p>1. 🤖 Fix the double camera prompt</p><p>2. 🧑 Request friends API access</p>
+            </div></div>
+          </div>
+        </div></div></figure>
       <h2>Agent Output Style</h2><time>2026</time>
-      <p>Custom output styles in my harness to improve how my agents reply<span class="setup">Setup: save a file as <code>~/.claude/output-styles/neil-brief.md</code>, then pick it in Claude Code with <code>/config</code> → Output style.</span></p>
+      <p><button class="blurb" type="button" data-zoom>Custom output styles in my harness to improve how my agents reply<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button></p>
       <div class="dls">
-        <a class="dl" href="media/output-style-v1.md" download="neil-brief-v1.md" data-file="v1">v1 · Organized<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></a>
-        <a class="dl" href="media/output-style-v2.md" download="neil-brief-v2.md" data-file="v2">v2 · Parallel tasks<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></a>
+        <a class="dl" href="media/organized-output-style.md" download="organized-output-style.md" data-file="v1">v1 · Organized<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></a>
+        <a class="dl" href="media/parallel-tasks-output-style.md" download="parallel-tasks-output-style.md" data-file="v2">v2 · Parallel tasks<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></a>
       </div>
+      <div class="setup">Drag a file into Claude Code and tell it to set it as your custom output style.</div>
     </li>
 
     <li data-project="rhythmoji">
@@ -255,10 +348,7 @@ li.old figure { cursor: pointer; -webkit-tap-highlight-color: transparent; }
       <figure><a class="phone" href="https://neilsekhon.com/blockle/" target="_blank" rel="noopener" aria-label="Play blockle on the web"><div class="screen" style="background: #161c23"><div class="status"><span>9:41</span><svg viewBox="0 0 66 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="6" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><path d="M30 2.2a10 10 0 0 1 7 2.9l1.3-1.4A12 12 0 0 0 30 .3a12 12 0 0 0-8.3 3.4L23 5.1a10 10 0 0 1 7-2.9zm0 4a6 6 0 0 1 4.1 1.6l1.4-1.4A8 8 0 0 0 30 4.2a8 8 0 0 0-5.5 2.2l1.4 1.4A6 6 0 0 1 30 6.2zm0 4l-2.4 1.6L30 12l2.4-1.8z"/><rect x="43" y=".5" width="20" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".5"/><rect x="45" y="2.5" width="16" height="7" rx="1.6"/><rect x="64" y="4" width="1.6" height="4" rx=".8" opacity=".5"/></svg></div><video src="media/blockle.mp4" poster="media/blockle.jpg" autoplay muted loop playsinline aria-label="blockle gameplay"></video><div class="home"></div></div></a></figure>
       <h2>blockle</h2><time>2025</time>
       <div class="plays">
-        <div class="play-col">
-          <a class="play" href="https://snapchat.com/t/BsSxJzqz" target="_blank" rel="noopener" aria-label="Play blockle on Snapchat" data-source="snapchat">Play on Snapchat<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
-          <span class="cap">newer version</span>
-        </div>
+        <a class="play" href="https://snapchat.com/t/BsSxJzqz" target="_blank" rel="noopener" aria-label="Play blockle on Snapchat" data-source="snapchat">Play on Snapchat<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
         <a class="play" href="https://neilsekhon.com/blockle/" target="_blank" rel="noopener" aria-label="Play blockle on the web">Play on Web<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
       </div>
     </li>
@@ -288,6 +378,19 @@ li.old figure { cursor: pointer; -webkit-tap-highlight-color: transparent; }
     </li>
   </ol>
 </main>
+
+<dialog class="lightbox" aria-label="Enlarged image"><button class="lb-close" type="button" aria-label="Close" autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg></button><div class="lb-body" data-project="output-styles"><div class="lb-shot"></div><div class="dls">
+        <a class="dl" href="media/organized-output-style.md" download="organized-output-style.md" data-file="v1">v1 · Organized<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></a>
+        <a class="dl" href="media/parallel-tasks-output-style.md" download="parallel-tasks-output-style.md" data-file="v2">v2 · Parallel tasks<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></a>
+      </div><div class="setup">Drag a file into Claude Code and tell it to set it as your custom output style.</div>
+<div class="lb-text">
+<p>Output styles are the most underrated feature in Claude Code.</p>
+<p>AGENTS.md is context your agent reads. An output style goes into the system prompt, so you get strict control over how it replies.</p>
+<p>Agents are way too verbose by default. I only want what needs my attention, not paragraphs that bury it.</p>
+<p>So I designed an output style for running lots of tasks in one thread:<br>→ every reply is a table of ongoing tasks and their status<br>→ anything that needs me is numbered at the end</p>
+<p>Then I can reply: "1 yes. 2 yes. 3 elaborate. 4 ignore"</p>
+<p>If I want to see the nitty gritty details I can just ask.</p>
+</div></div></dialog>
 
 <div class="possum" hidden aria-hidden="true">
   <img src="media/opossum.png" alt="">
@@ -330,8 +433,20 @@ document.querySelectorAll('li.old figure').forEach(fig => fig.addEventListener('
   possum.hidden = true; void possum.offsetWidth; possum.hidden = false;
   squeak();
   clearTimeout(timer);
-  timer = setTimeout(() => possum.hidden = true, 3300);
+  timer = setTimeout(() => possum.hidden = true, 1700);
 }));
+
+// Agent Output Style: tapping the image (once the work is in focus) opens it large; any tap or Esc closes it.
+const lightbox = document.querySelector('.lightbox');
+const shot = document.querySelector('.zoom .cmp');
+document.querySelectorAll('[data-zoom]').forEach(b => b.addEventListener('click', () => {
+  lightbox.querySelector('.lb-shot').replaceChildren(shot.cloneNode(true));
+  lightbox.showModal();
+  root.classList.add('lb-open');
+}));
+document.querySelector('.zoom').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } });
+lightbox.addEventListener('close', () => root.classList.remove('lb-open'));
+lightbox.addEventListener('click', e => { if (!e.target.closest('a, .lb-text')) lightbox.close(); });
 
 // Name shrinks into the glass header over the first 160px of scroll.
 const root = document.documentElement;
@@ -352,7 +467,7 @@ document.querySelector('main').addEventListener('click', e => {
   if (!root.classList.contains('soft')) return;
   e.preventDefault(); e.stopPropagation();
   const li = e.target.closest('li');
-  (li || e.currentTarget).scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+  (li || e.currentTarget).scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: li?.classList.contains('wide') ? 'start' : 'center' });
 }, true);
 
 // Reveal each project once.

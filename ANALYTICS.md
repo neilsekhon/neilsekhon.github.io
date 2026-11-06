@@ -17,6 +17,7 @@
 | `project_view` | Half of a project scrolled into view, once per visit | `project` |
 | `game_play` | Opened a game | `project`, `source` (`button`, `snapchat` or `phone`) |
 | `download` | Clicked a download link | `project`, `file` (`v1` or `v2`) |
+| `image_open` | Opened an item's image full size | `project` |
 | `opossum` | Tapped an older project's phone | `project` |
 | `soft_tap` | Tapped dimmed work at the top, which scrolls to it | `project` |
 
