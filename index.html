@@ -154,7 +154,10 @@ h2 { font-size: 40px; font-weight: 600; line-height: 1.05; letter-spacing: -0.03
 .play:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 /* Two or more buttons side by side. */
 .plays { grid-column: 2; grid-row: 4; justify-self: start; margin-top: 24px; display: flex; flex-wrap: wrap; gap: 10px; }
+.plays { align-items: flex-start; }
 .plays .play { margin-top: 0; }
+.play-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.cap { color: var(--muted); font-size: 13px; line-height: 1; }
 time { display: block; color: var(--muted); font-size: 16px; line-height: 1; font-variant-numeric: tabular-nums; margin-top: 14px; }
 
 li p { color: var(--body); margin-top: 20px; max-width: 30em; }
@@ -164,6 +167,8 @@ li.wide { grid-template-columns: minmax(0, 760px); grid-template-rows: none; }
 li.wide figure { grid-column: 1; grid-row: auto; margin-bottom: 40px; }
 li.wide figure img { display: block; width: 100%; height: auto; border-radius: 14px; box-shadow: 0 0 0 1px var(--line), 0 24px 48px -16px rgb(0 0 0 / 0.6); }
 li.wide h2, li.wide time, li.wide p, li.wide .dls { grid-column: 1; grid-row: auto; }
+.setup { display: block; margin-top: 14px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.setup code { font: 500 12.5px/1 ui-monospace, "SF Mono", Menlo, monospace; color: var(--body); }
 .dls { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
 .dl {
   display: inline-flex; align-items: center; gap: 8px; padding: 0 14px 0 18px; height: 40px;
@@ -233,7 +238,7 @@ li.old figure { cursor: pointer; -webkit-tap-highlight-color: transparent; }
     <li data-project="output-styles" class="wide">
       <figure><img src="media/output-styles.png" alt="The same question answered in the default style, v1 and v2. The default is a wall of text; v1 is organized into sections; v2 is a status table with next steps." width="1600" height="900" loading="lazy"></figure>
       <h2>Agent Output Style</h2><time>2026</time>
-      <p>Custom output styles in my harness to improve how my agents reply</p>
+      <p>Custom output styles in my harness to improve how my agents reply<span class="setup">Setup: save a file as <code>~/.claude/output-styles/neil-brief.md</code>, then pick it in Claude Code with <code>/config</code> → Output style.</span></p>
       <div class="dls">
         <a class="dl" href="media/output-style-v1.md" download="neil-brief-v1.md" data-file="v1">v1 · Organized<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></a>
         <a class="dl" href="media/output-style-v2.md" download="neil-brief-v2.md" data-file="v2">v2 · Parallel tasks<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></a>
@@ -250,8 +255,11 @@ li.old figure { cursor: pointer; -webkit-tap-highlight-color: transparent; }
       <figure><a class="phone" href="https://neilsekhon.com/blockle/" target="_blank" rel="noopener" aria-label="Play blockle on the web"><div class="screen" style="background: #161c23"><div class="status"><span>9:41</span><svg viewBox="0 0 66 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="6" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><path d="M30 2.2a10 10 0 0 1 7 2.9l1.3-1.4A12 12 0 0 0 30 .3a12 12 0 0 0-8.3 3.4L23 5.1a10 10 0 0 1 7-2.9zm0 4a6 6 0 0 1 4.1 1.6l1.4-1.4A8 8 0 0 0 30 4.2a8 8 0 0 0-5.5 2.2l1.4 1.4A6 6 0 0 1 30 6.2zm0 4l-2.4 1.6L30 12l2.4-1.8z"/><rect x="43" y=".5" width="20" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".5"/><rect x="45" y="2.5" width="16" height="7" rx="1.6"/><rect x="64" y="4" width="1.6" height="4" rx=".8" opacity=".5"/></svg></div><video src="media/blockle.mp4" poster="media/blockle.jpg" autoplay muted loop playsinline aria-label="blockle gameplay"></video><div class="home"></div></div></a></figure>
       <h2>blockle</h2><time>2025</time>
       <div class="plays">
+        <div class="play-col">
+          <a class="play" href="https://snapchat.com/t/BsSxJzqz" target="_blank" rel="noopener" aria-label="Play blockle on Snapchat" data-source="snapchat">Play on Snapchat<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
+          <span class="cap">newer version</span>
+        </div>
         <a class="play" href="https://neilsekhon.com/blockle/" target="_blank" rel="noopener" aria-label="Play blockle on the web">Play on Web<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
-        <a class="play" href="https://snapchat.com/t/BsSxJzqz" target="_blank" rel="noopener" aria-label="Play blockle on Snapchat" data-source="snapchat">Play on Snapchat<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
       </div>
     </li>
 
