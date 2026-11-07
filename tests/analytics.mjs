@@ -68,6 +68,8 @@ same(run.events().at(-1), ['event', 'download', { project: 'output-styles' }]);
 
 run.handlers.click({ target: target('output-styles', '[data-zoom]') });
 same(run.events().at(-1), ['event', 'image_open', { project: 'output-styles' }]);
+run.handlers.click({ target: target('home-view', '[data-zoom]') });
+same(run.events().at(-1), ['event', 'image_open', { project: 'home-view' }]);
 
 const soft = setup('neilsekhon.com', { soft: true });
 soft.handlers.click({ target: target('rhythmoji', 'a.play') });

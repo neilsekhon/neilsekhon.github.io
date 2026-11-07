@@ -8,7 +8,7 @@
   function gtag() { window.dataLayer.push(arguments); }
 
   // Only these events, and only these parameter values, ever leave the page.
-  const projects = new Set(['rhythmoji', 'blockle', 'dayhub', 'codehop', 'totem', 'freshman15', 'output-styles']);
+  const projects = new Set(['rhythmoji', 'blockle', 'dayhub', 'codehop', 'totem', 'freshman15', 'output-styles', 'home-view']);
   const sources = new Set(['button', 'snapchat', 'phone']);
   const files = new Set(['v1', 'v2']);
   const allowedEvents = new Set(['project_view', 'game_play', 'opossum', 'soft_tap', 'download', 'image_open']);

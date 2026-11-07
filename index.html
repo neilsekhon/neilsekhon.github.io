@@ -6,7 +6,7 @@
 <title>neil sekhon</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<script src="analytics.js?v=4" defer></script>
+<script src="analytics.js?v=5" defer></script>
 <meta name="description" content="Neil Sekhon, designer + engineer. A timeline of my work.">
 <script>document.documentElement.classList.add('js', 'soft');</script>
 <style>
@@ -98,10 +98,10 @@ header p { color: var(--muted); font-size: 20px; line-height: 1.3; margin-top: 6
 @keyframes work-in { from { opacity: 0.35; } to { opacity: 1; } }
 
 ol { list-style: none; padding: 0 0 160px; display: grid; gap: 120px; }
-/* Phone left, words right, side by side. */
-li { display: grid; grid-template-columns: 280px minmax(0, 400px); justify-content: center; grid-template-rows: 1fr auto auto auto 1fr; column-gap: 64px; }
-li figure { grid-column: 1; grid-row: 1 / -1; margin: 0; }
-li h2, li time, li p { grid-column: 2; }
+/* Words left, phone right, so every title starts on the same left edge as the wide items. */
+li { display: grid; grid-template-columns: minmax(0, 400px) 280px; justify-content: space-between; grid-template-rows: 1fr auto auto auto auto 1fr; column-gap: 64px; }
+li figure { grid-column: 2; grid-row: 1 / -1; margin: 0; }
+li h2, li time, li p { grid-column: 1; }
 li h2 { grid-row: 2; }
 li time { grid-row: 3; }
 li p { grid-row: 4; }
@@ -140,7 +140,7 @@ figure { margin-bottom: 24px; container-type: inline-size; }
 
 h2 { font-size: 40px; font-weight: 600; line-height: 1.05; letter-spacing: -0.035em; }
 .play {
-  grid-column: 2; grid-row: 4; justify-self: start; margin-top: 24px;
+  grid-column: 1; grid-row: 5; justify-self: start; margin-top: 24px;
   display: inline-flex; align-items: center; gap: 6px; padding: 0 14px 0 18px; height: 40px;
   border-radius: 99px; background: var(--ink); color: var(--ground);
   box-shadow: inset 0 -1px 0 rgb(0 0 0 / 0.12), 0 1px 2px rgb(0 0 0 / 0.4);
@@ -153,7 +153,7 @@ h2 { font-size: 40px; font-weight: 600; line-height: 1.05; letter-spacing: -0.03
 .play:active { background: #d4d4d4; }
 .play:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 /* Two or more buttons side by side. */
-.plays { grid-column: 2; grid-row: 4; justify-self: start; margin-top: 24px; display: flex; flex-wrap: wrap; gap: 10px; }
+.plays { grid-column: 1; grid-row: 5; justify-self: start; margin-top: 24px; display: flex; flex-wrap: wrap; gap: 10px; }
 .plays { align-items: flex-start; }
 .plays .play { margin-top: 0; }
 time { display: block; color: var(--muted); font-size: 16px; line-height: 1; font-variant-numeric: tabular-nums; margin-top: 14px; }
@@ -187,6 +187,8 @@ li.wide h2, li.wide time, li.wide p, li.wide .dls, li.wide .setup { grid-column:
 html.lb-open { overflow: hidden; }
 .lb-body .dls { margin-top: 0; justify-content: center; }
 .lb-shot { width: min(94vw, 1600px, calc(72vh * 16 / 9)); container-type: inline-size; }
+.lb-shot:has(> img) { width: min(94vw, 1800px, calc(80vh * 2000 / 1014)); }
+.lb-shot > img { display: block; width: 100%; height: auto; border-radius: 14px; box-shadow: 0 0 0 1px var(--line), 0 24px 48px -16px rgb(0 0 0 / 0.6); }
 
 /* Comparison graphic, drawn in HTML so it stays sharp and matches the dark page.
    Everything is in em off one size that tracks the width of its container. */
@@ -302,6 +304,12 @@ li.old figure { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
 <main>
   <ol>
+    <li data-project="home-view" class="wide">
+      <figure><div class="zoom" role="button" tabindex="0" data-zoom aria-label="Enlarge: my custom home view"><img src="media/home-view.webp" width="2000" height="1014" alt="A grid of mini apps: agent chats, todos, calendar, lunch menu, texts, Drive, GitHub and Slack"></div></figure>
+      <h2>My Custom Home View</h2><time>2026</time>
+      <p>A UI layer of mini apps I built on top of my harness</p>
+    </li>
+
     <li data-project="output-styles" class="wide">
       <figure><div class="zoom" role="button" tabindex="0" data-zoom aria-label="Enlarge: the same question answered in the default style, v1 and v2"><div class="cmp">
           <div class="cmp-title">Same question, <span>three output styles</span></div>
@@ -336,17 +344,31 @@ li.old figure { cursor: pointer; -webkit-tap-highlight-color: transparent; }
         <a class="dl" href="media/parallel-tasks-output-style.md" download="parallel-tasks-output-style.md" data-file="v2">v2 · Parallel tasks<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></a>
       </div>
       <div class="setup">Drag a file into Claude Code and tell it to set it as your custom output style.</div>
+      <template class="lb-extra"><div class="dls">
+        <a class="dl" href="media/organized-output-style.md" download="organized-output-style.md" data-file="v1">v1 · Organized<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></a>
+        <a class="dl" href="media/parallel-tasks-output-style.md" download="parallel-tasks-output-style.md" data-file="v2">v2 · Parallel tasks<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></a>
+      </div><div class="setup">Drag a file into Claude Code and tell it to set it as your custom output style.</div>
+<div class="lb-text">
+<p>Output styles are the most underrated feature in Claude Code.</p>
+<p>AGENTS.md is context your agent reads. An output style goes into the system prompt, so you get strict control over how it replies.</p>
+<p>Agents are way too verbose by default. I only want what needs my attention, not paragraphs that bury it.</p>
+<p>So I designed an output style for running lots of tasks in one thread:<br>→ every reply is a table of ongoing tasks and their status<br>→ anything that needs me is numbered at the end</p>
+<p>Then I can reply: "1 yes. 2 yes. 3 elaborate. 4 ignore"</p>
+<p>If I want to see the nitty gritty details I can just ask.</p>
+</div></template>
     </li>
 
     <li data-project="rhythmoji">
       <figure><a class="phone" href="https://www.snapchat.com/lens/8f943ca0563544a98f3d4382113056e3" target="_blank" rel="noopener" aria-label="Play Rhythmoji on Snapchat"><div class="screen" style="background: linear-gradient(#05070d, #3d202d)"><div class="status"><span>9:41</span><svg viewBox="0 0 66 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="6" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><path d="M30 2.2a10 10 0 0 1 7 2.9l1.3-1.4A12 12 0 0 0 30 .3a12 12 0 0 0-8.3 3.4L23 5.1a10 10 0 0 1 7-2.9zm0 4a6 6 0 0 1 4.1 1.6l1.4-1.4A8 8 0 0 0 30 4.2a8 8 0 0 0-5.5 2.2l1.4 1.4A6 6 0 0 1 30 6.2zm0 4l-2.4 1.6L30 12l2.4-1.8z"/><rect x="43" y=".5" width="20" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".5"/><rect x="45" y="2.5" width="16" height="7" rx="1.6"/><rect x="64" y="4" width="1.6" height="4" rx=".8" opacity=".5"/></svg></div><video src="media/rhythmoji.mp4" poster="media/rhythmoji.jpg" autoplay muted loop playsinline aria-label="Rhythmoji gameplay"></video><div class="home"></div></div></a></figure>
       <h2>Rhythmoji</h2><time>2026</time>
+      <p>Music game.</p>
       <a class="play" href="https://www.snapchat.com/lens/8f943ca0563544a98f3d4382113056e3" target="_blank" rel="noopener" aria-label="Play Rhythmoji on Snapchat">Play on Snapchat<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
     </li>
 
     <li data-project="blockle">
       <figure><a class="phone" href="https://neilsekhon.com/blockle/" target="_blank" rel="noopener" aria-label="Play blockle on the web"><div class="screen" style="background: #161c23"><div class="status"><span>9:41</span><svg viewBox="0 0 66 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="6" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><path d="M30 2.2a10 10 0 0 1 7 2.9l1.3-1.4A12 12 0 0 0 30 .3a12 12 0 0 0-8.3 3.4L23 5.1a10 10 0 0 1 7-2.9zm0 4a6 6 0 0 1 4.1 1.6l1.4-1.4A8 8 0 0 0 30 4.2a8 8 0 0 0-5.5 2.2l1.4 1.4A6 6 0 0 1 30 6.2zm0 4l-2.4 1.6L30 12l2.4-1.8z"/><rect x="43" y=".5" width="20" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".5"/><rect x="45" y="2.5" width="16" height="7" rx="1.6"/><rect x="64" y="4" width="1.6" height="4" rx=".8" opacity=".5"/></svg></div><video src="media/blockle.mp4" poster="media/blockle.jpg" autoplay muted loop playsinline aria-label="blockle gameplay"></video><div class="home"></div></div></a></figure>
       <h2>blockle</h2><time>2025</time>
+      <p>Puzzle game.</p>
       <div class="plays">
         <a class="play" href="https://snapchat.com/t/BsSxJzqz" target="_blank" rel="noopener" aria-label="Play blockle on Snapchat" data-source="snapchat">Play on Snapchat<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
         <a class="play" href="https://neilsekhon.com/blockle/" target="_blank" rel="noopener" aria-label="Play blockle on the web">Play on Web<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
@@ -379,18 +401,7 @@ li.old figure { cursor: pointer; -webkit-tap-highlight-color: transparent; }
   </ol>
 </main>
 
-<dialog class="lightbox" aria-label="Enlarged image"><button class="lb-close" type="button" aria-label="Close" autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg></button><div class="lb-body" data-project="output-styles"><div class="lb-shot"></div><div class="dls">
-        <a class="dl" href="media/organized-output-style.md" download="organized-output-style.md" data-file="v1">v1 · Organized<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></a>
-        <a class="dl" href="media/parallel-tasks-output-style.md" download="parallel-tasks-output-style.md" data-file="v2">v2 · Parallel tasks<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg></a>
-      </div><div class="setup">Drag a file into Claude Code and tell it to set it as your custom output style.</div>
-<div class="lb-text">
-<p>Output styles are the most underrated feature in Claude Code.</p>
-<p>AGENTS.md is context your agent reads. An output style goes into the system prompt, so you get strict control over how it replies.</p>
-<p>Agents are way too verbose by default. I only want what needs my attention, not paragraphs that bury it.</p>
-<p>So I designed an output style for running lots of tasks in one thread:<br>→ every reply is a table of ongoing tasks and their status<br>→ anything that needs me is numbered at the end</p>
-<p>Then I can reply: "1 yes. 2 yes. 3 elaborate. 4 ignore"</p>
-<p>If I want to see the nitty gritty details I can just ask.</p>
-</div></div></dialog>
+<dialog class="lightbox" aria-label="Enlarged image"><button class="lb-close" type="button" aria-label="Close" autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg></button><div class="lb-body"></div></dialog>
 
 <div class="possum" hidden aria-hidden="true">
   <img src="media/opossum.png" alt="">
@@ -436,15 +447,20 @@ document.querySelectorAll('li.old figure').forEach(fig => fig.addEventListener('
   timer = setTimeout(() => possum.hidden = true, 1700);
 }));
 
-// Agent Output Style: tapping the image (once the work is in focus) opens it large; any tap or Esc closes it.
+// Wide items: tapping the image (once the work is in focus) opens it large, with any extras from the item's template; any tap or Esc closes it.
 const lightbox = document.querySelector('.lightbox');
-const shot = document.querySelector('.zoom .cmp');
+const lbBody = lightbox.querySelector('.lb-body');
 document.querySelectorAll('[data-zoom]').forEach(b => b.addEventListener('click', () => {
-  lightbox.querySelector('.lb-shot').replaceChildren(shot.cloneNode(true));
+  const li = b.closest('li');
+  const shot = document.createElement('div');
+  shot.className = 'lb-shot';
+  shot.append(li.querySelector('.zoom').firstElementChild.cloneNode(true));
+  lbBody.dataset.project = li.dataset.project;
+  lbBody.replaceChildren(shot, ...(li.querySelector('.lb-extra')?.content.cloneNode(true).childNodes || []));
   lightbox.showModal();
   root.classList.add('lb-open');
 }));
-document.querySelector('.zoom').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } });
+document.querySelectorAll('.zoom').forEach(z => z.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.currentTarget.click(); } }));
 lightbox.addEventListener('close', () => root.classList.remove('lb-open'));
 lightbox.addEventListener('click', e => { if (!e.target.closest('a, .lb-text')) lightbox.close(); });
 
